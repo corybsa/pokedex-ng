@@ -90,9 +90,14 @@ export class PokedexService {
     return this.http.get<Pokemon>(url).pipe(
       map((res: Pokemon) => {
         const pokemonList: PokemonListItem[] = JSON.parse(localStorage.getItem(Helper.StorageKeys.pokemonList) as string);
+
+        if(!pokemonList) {
+          return res;
+        }
+
         const pokemon = pokemonList.find(item => item.id === id)
         pokemon!.types = res.types;
-        
+
         const index = pokemonList.findIndex(item => item.id === id);
         pokemonList[index] = pokemon!;
         localStorage.setItem(Helper.StorageKeys.pokemonList, JSON.stringify(pokemonList));

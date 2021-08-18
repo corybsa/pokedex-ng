@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
+import { concat, Observable } from 'rxjs';
 import { NamedApiResourceList } from '../models/common/named-api-resource-list.model';
 import { NamedApiResource } from '../models/common/named-api-resource.model';
+import { Pokemon } from '../models/pokemon/pokemon.model';
 import { Helper } from '../models/util/helper';
 import { PokemonListItem } from '../models/util/pokemon-list-item.model';
 import { PokedexService } from '../services/pokedex.service';
@@ -15,6 +17,7 @@ import { PokedexService } from '../services/pokedex.service';
 export class PokedexIndexComponent implements OnInit {
   pokemon!: NamedApiResourceList;
   isSearching = false;
+  searchTimeout: number = Infinity;
 
   constructor(
     private service: PokedexService,
@@ -85,24 +88,40 @@ export class PokedexIndexComponent implements OnInit {
   }
 
   searchList(value: string) {
-    let pokemonList: PokemonListItem[] = JSON.parse(localStorage.getItem(Helper.StorageKeys.pokemonList) as string);
-    pokemonList = pokemonList.filter(item => item.name.match(value));
+    if(value === '') {
+      this.isSearching = false;
+      this.goToPage(this.getCurrentPage());
+      return;
+    }
 
-    const results: NamedApiResource[] = pokemonList.map(item => {
-      return {
-        name: item.name,
-        url: `https://pokeapi.co/api/v2/pokemon/${item.id}`
+    window.clearTimeout(this.searchTimeout);
+
+    this.searchTimeout = window.setTimeout(() => {
+      let pokemonList: PokemonListItem[] = JSON.parse(localStorage.getItem(Helper.StorageKeys.pokemonList) as string);
+      const regex = new RegExp(value, 'gi');
+      pokemonList = pokemonList.filter(item => item.name.match(regex));
+      const subs: Observable<Pokemon>[] = [];
+
+      const results: NamedApiResource[] = pokemonList.map(item => {
+        subs.push(this.service.getPokemonTypes(item.id));
+
+        return {
+          name: item.name,
+          url: `https://pokeapi.co/api/v2/pokemon/${item.id}`
+        };
+      });
+
+      concat(...subs).subscribe();
+
+      this.isSearching = true;
+
+      this.pokemon = {
+        count: pokemonList.length,
+        next: '',
+        previous: '',
+        results
       };
-    });
-
-    this.isSearching = true;
-
-    this.pokemon = {
-      count: pokemonList.length,
-      next: '',
-      previous: '',
-      results
-    };
+    }, 250);
   }
 
   clearSearch(input: HTMLInputElement) {
