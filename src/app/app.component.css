@@ -1,0 +1,23 @@
+.top-bar {
+    height: 50px;
+    background-color: #f44336;
+    color: white;
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+    padding-top: 500px;
+    top: -500px;
+}
+
+.top-bar mat-icon {
+    position: fixed;
+    top: 13px;
+    left: 10px;
+}
+
+.top-bar span {
+    position: relative;
+    top: 15px;
+    display: block;
+    text-align: center;
+}
