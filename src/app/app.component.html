@@ -1,6 +1,22 @@
-<div class="top-bar">
-    <mat-icon>menu</mat-icon>
-    <span>Pokedex</span>
-</div>
+<mat-drawer-container>
+    <mat-drawer #drawer mode="over">
+        <div class="nav-item">
+            <mat-icon>search</mat-icon>
+            <span>Pokedex</span>
+        </div>
+        <div class="nav-item">
+            <mat-icon>science</mat-icon>
+            <span>Types</span>
+        </div>
+    </mat-drawer>
+    <mat-drawer-content>
+        <div class="top-bar">
+            <mat-icon (click)="drawer.toggle()">menu</mat-icon>
+            <span>Pokedex</span>
+        </div>
 
-<router-outlet></router-outlet>
+        <router-outlet></router-outlet>
+    </mat-drawer-content>
+</mat-drawer-container>
+
+

@@ -1,3 +1,21 @@
+mat-drawer-container {
+    min-height: 100%;
+}
+
+mat-drawer {
+    min-width: 50%;
+}
+
+.nav-item {
+    margin-top: 10px;
+    padding-left: 10px;
+}
+
+.nav-item span {
+    position: relative;
+    top: -6px;
+}
+
 .top-bar {
     height: 50px;
     background-color: #f44336;
@@ -18,6 +36,7 @@
 .top-bar span {
     position: relative;
     top: 15px;
-    display: block;
+    left: calc(50% - 30px);
+    display: inline-block;
     text-align: center;
 }
