@@ -3,3 +3,8 @@
     background-color: white;
     min-height: calc(100% - 90px);
 }
+
+.mat-card-avatar {
+    height: 80px;
+    width: 80px;
+}

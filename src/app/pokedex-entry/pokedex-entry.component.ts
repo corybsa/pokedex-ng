@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Pokemon } from '../models/pokemon/pokemon.model';
 import { PokedexService } from '../services/pokedex.service';
 
@@ -13,7 +13,8 @@ export class PokedexEntryComponent implements OnInit {
 
   constructor(
     private service: PokedexService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     const id = +this.route.snapshot.params['id'];
     this.service.getPokemon(id).subscribe(p => this.pokemon = p);
@@ -22,7 +23,11 @@ export class PokedexEntryComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  test() {
-    console.log(this.pokemon);
+  capitalizeFirstLetter(str: string) {
+    return str.substr(0, 1).toUpperCase() + str.substr(1);
+  }
+
+  back() {
+    this.router.navigate(['/']);
   }
 }
