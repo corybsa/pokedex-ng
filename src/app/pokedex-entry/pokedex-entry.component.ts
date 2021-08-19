@@ -82,8 +82,8 @@ export class PokedexEntryComponent implements OnInit {
       
       this.halfDamageFrom = _.without(halfDamage, ...doubleDamage);
       this.quarterDamageFrom = _.intersection(this.halfDamageFrom, [pokemonType1, pokemonType2]);
-      this.halfDamageFrom = _.without(this.halfDamageFrom, ...this.quarterDamageFrom);
-      this.doubleDamageFrom = _.without(doubleDamage, ...halfDamage);
+      this.halfDamageFrom = _.difference(this.halfDamageFrom, this.quarterDamageFrom);
+      this.doubleDamageFrom = _.difference(doubleDamage, halfDamage);
       this.normalDamageFrom = _.difference(PokemonTypes.Types, this.halfDamageFrom, this.doubleDamageFrom, this.quarterDamageFrom);
     } else {
       this.halfDamageFrom = _.pluck(this.damageRelations[0].half_damage_from, 'name');
