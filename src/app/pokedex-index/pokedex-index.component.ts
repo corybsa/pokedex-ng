@@ -2,12 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { concat, Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { NamedApiResourceList } from '../models/common/named-api-resource-list.model';
 import { NamedApiResource } from '../models/common/named-api-resource.model';
 import { Pokemon } from '../models/pokemon/pokemon.model';
 import { Helper } from '../models/util/helper';
 import { PokemonListItem } from '../models/util/pokemon-list-item.model';
+import { Storage } from '../models/util/storage';
 import { PokedexService } from '../services/pokedex.service';
+import { PokemonTypesService } from '../services/pokemon-types.service';
 
 @Component({
   selector: 'app-pokedex-index',
@@ -21,6 +24,7 @@ export class PokedexIndexComponent implements OnInit {
 
   constructor(
     private service: PokedexService,
+    private typesService: PokemonTypesService,
     private router: Router
   ) {
     this.service.getPokemonList().subscribe(res => this.pokemon = res);
@@ -55,7 +59,7 @@ export class PokedexIndexComponent implements OnInit {
 
   getPokemonTypes(url: string) {
     const id = this.getIdFromUrl(url);
-    const pokemonList: PokemonListItem[] = JSON.parse(localStorage.getItem(Helper.StorageKeys.pokemonList) as string);
+    const pokemonList: PokemonListItem[] = Storage.getPokemon();
 
     if(!pokemonList) {
       return [];
@@ -97,13 +101,13 @@ export class PokedexIndexComponent implements OnInit {
     window.clearTimeout(this.searchTimeout);
 
     this.searchTimeout = window.setTimeout(() => {
-      let pokemonList: PokemonListItem[] = JSON.parse(localStorage.getItem(Helper.StorageKeys.pokemonList) as string);
+      let pokemonList: PokemonListItem[] = Storage.getPokemon();
       const regex = new RegExp(value, 'gi');
       pokemonList = pokemonList.filter(item => item.name.match(regex));
       const subs: Observable<Pokemon>[] = [];
 
       const results: NamedApiResource[] = pokemonList.map(item => {
-        subs.push(this.service.getPokemonTypes(item.id));
+        subs.push(this.typesService.getPokemonTypes(item.id));
 
         return {
           name: item.name,
@@ -111,7 +115,9 @@ export class PokedexIndexComponent implements OnInit {
         };
       });
 
-      concat(...subs).subscribe();
+      concat(...subs).pipe(
+        finalize(() => Storage.savePokemon())
+      ).subscribe();
 
       this.isSearching = true;
 

@@ -1,6 +1,5 @@
 <div class="container">
     <mat-icon (click)="back()">arrow_back_ios</mat-icon>
-    <span *ngIf="pokemon">Entry for {{ capitalizeFirstLetter(pokemon.name) }}</span>
     <mat-card *ngIf="pokemon" style="margin-bottom: 10px;">
         <mat-card-header>
             <img mat-card-avatar [src]="pokemon.sprites.front_default" [alt]="capitalizeFirstLetter(pokemon.name)">

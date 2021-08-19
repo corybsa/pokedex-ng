@@ -1,9 +1,4 @@
 export class Helper {
-    static StorageKeys = {
-        pokemonList: 'pokemon',
-        expireTime: 'expire'
-    };
-
     /**
      * Creates a deep copy of <code>object</code>.
      *

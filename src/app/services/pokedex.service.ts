@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { concat, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 import { Pokemon } from '../models/pokemon/pokemon.model';
 import { NamedApiResourceList } from '../models/common/named-api-resource-list.model';
-import { Helper } from '../models/util/helper';
 import * as moment from 'moment';
-import { PokemonListItem } from '../models/util/pokemon-list-item.model';
+import { PokemonTypesService } from './pokemon-types.service';
+import { Storage } from '../models/util/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -20,14 +20,15 @@ export class PokedexService {
   };
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private typesService: PokemonTypesService
   ) {
     this.getAllPokemon().subscribe();
   }
 
   private getAllPokemon(): Observable<NamedApiResourceList> {
-    if(localStorage.getItem(Helper.StorageKeys.pokemonList) !== null) {
-      const expireTime = moment(localStorage.getItem(Helper.StorageKeys.expireTime));
+    if(Storage.getPokemon() !== null) {
+      const expireTime = Storage.getExpireTime();
 
       if(moment().isAfter(expireTime)) {
         return new Observable(o => o.complete()); 
@@ -38,8 +39,6 @@ export class PokedexService {
 
     return this.http.get<NamedApiResourceList>(url).pipe(
       map(item => {
-        const payload: PokemonListItem[] = [];
-
         for(const res of item.results) {
           const id = +res.url.replace(/v2|\D/gi, '');
 
@@ -47,11 +46,11 @@ export class PokedexService {
             break;
           }
 
-          payload.push({ id, name: res.name, types: [] });
+          Storage.addPokemon({ id, name: res.name, types: [] });
         }
 
-        localStorage.setItem(Helper.StorageKeys.expireTime, moment().toDate().toISOString());
-        localStorage.setItem(Helper.StorageKeys.pokemonList, JSON.stringify(payload));
+        Storage.setExpireTime(moment().add(1, 'week').toDate());
+        Storage.savePokemon();
 
         return item;
       })
@@ -67,40 +66,13 @@ export class PokedexService {
 
         res.results.forEach(item => {
           const id: number = +item.url.replace(/v2|\D/gi, '');
-          subs.push(this.getPokemonTypes(id));
+          subs.push(this.typesService.getPokemonTypes(id));
         });
 
         // execute subscriptions in order
-        concat(...subs).subscribe();
-
-        return res;
-      })
-    );
-  }
-
-  getPokemonTypes(id: number): Observable<Pokemon> {
-    const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
-    const pokemonList: PokemonListItem[] = JSON.parse(localStorage.getItem(Helper.StorageKeys.pokemonList) as string);
-    const pokemon = pokemonList?.find(item => item.id === id)
-
-    if(pokemon && pokemon.types.length > 0) {
-      return new Observable(o => o.complete());
-    }
-
-    return this.http.get<Pokemon>(url).pipe(
-      map((res: Pokemon) => {
-        const pokemonList: PokemonListItem[] = JSON.parse(localStorage.getItem(Helper.StorageKeys.pokemonList) as string);
-
-        if(!pokemonList) {
-          return res;
-        }
-
-        const pokemon = pokemonList.find(item => item.id === id)
-        pokemon!.types = res.types;
-
-        const index = pokemonList.findIndex(item => item.id === id);
-        pokemonList[index] = pokemon!;
-        localStorage.setItem(Helper.StorageKeys.pokemonList, JSON.stringify(pokemonList));
+        concat(...subs).pipe(
+          finalize(() => Storage.savePokemon())
+        ).subscribe();
 
         return res;
       })
@@ -123,12 +95,6 @@ export class PokedexService {
   getPage(pageNum: number): Observable<NamedApiResourceList> {
     this.page = pageNum;
     return this.getPokemonList();
-  }
-
-  getPokemonSprite(id: number): Observable<any> {
-    const url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
-
-    return this.http.get<any>(url);
   }
 
   getPokemon(id: number): Observable<Pokemon> {
