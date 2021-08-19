@@ -12,7 +12,6 @@ export class Storage {
 
     static getPokemon(): PokemonListItem[] {
         if(!this.pokemonList || this.wasUpdated) {
-            console.log('accessing localStorage');
             this.pokemonList = JSON.parse(localStorage.getItem(this.Keys.pokemonList) as string) as PokemonListItem[];
             this.wasUpdated = false;
         }

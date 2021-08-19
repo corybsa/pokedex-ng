@@ -6,7 +6,6 @@ import { finalize } from 'rxjs/operators';
 import { NamedApiResourceList } from '../models/common/named-api-resource-list.model';
 import { NamedApiResource } from '../models/common/named-api-resource.model';
 import { Pokemon } from '../models/pokemon/pokemon.model';
-import { Helper } from '../models/util/helper';
 import { PokemonListItem } from '../models/util/pokemon-list-item.model';
 import { Storage } from '../models/util/storage';
 import { PokedexService } from '../services/pokedex.service';
@@ -91,8 +90,8 @@ export class PokedexIndexComponent implements OnInit {
     }
   }
 
-  searchList(value: string) {
-    if(value === '') {
+  searchList(searchTerm: string) {
+    if(searchTerm === '') {
       this.isSearching = false;
       this.goToPage(this.getCurrentPage());
       return;
@@ -101,8 +100,19 @@ export class PokedexIndexComponent implements OnInit {
     window.clearTimeout(this.searchTimeout);
 
     this.searchTimeout = window.setTimeout(() => {
-      let pokemonList: PokemonListItem[] = Storage.getPokemon();
-      const regex = new RegExp(value, 'gi');
+      this.populateSearchResults(searchTerm);
+    }, 250);
+  }
+
+  clearSearch(input: HTMLInputElement) {
+    input.value = '';
+    this.isSearching = false;
+    this.goToPage(this.getCurrentPage());
+  }
+
+  private populateSearchResults(searchTerm: string) {
+    let pokemonList: PokemonListItem[] = Storage.getPokemon();
+      const regex = new RegExp(searchTerm, 'gi');
       pokemonList = pokemonList.filter(item => item.name.match(regex));
       const subs: Observable<Pokemon>[] = [];
 
@@ -127,12 +137,5 @@ export class PokedexIndexComponent implements OnInit {
         previous: '',
         results
       };
-    }, 250);
-  }
-
-  clearSearch(input: HTMLInputElement) {
-    input.value = '';
-    this.isSearching = false;
-    this.goToPage(this.getCurrentPage());
   }
 }
