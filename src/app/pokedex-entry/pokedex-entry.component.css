@@ -4,6 +4,10 @@
     min-height: calc(100% - 90px);
 }
 
+.back {
+    cursor: pointer;
+}
+
 .mat-card-avatar {
     height: 80px;
     width: 80px;

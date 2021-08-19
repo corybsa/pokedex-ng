@@ -6,6 +6,7 @@ import { finalize } from 'rxjs/operators';
 import { NamedApiResourceList } from '../models/common/named-api-resource-list.model';
 import { NamedApiResource } from '../models/common/named-api-resource.model';
 import { Pokemon } from '../models/pokemon/pokemon.model';
+import { Helper } from '../models/util/helper';
 import { PokemonListItem } from '../models/util/pokemon-list-item.model';
 import { Storage } from '../models/util/storage';
 import { PokedexService } from '../services/pokedex.service';
@@ -53,7 +54,7 @@ export class PokedexIndexComponent implements OnInit {
   }
 
   getIdFromUrl(url: string): number {
-    return +url.replace(/v2|\D/gi, '');
+    return Helper.getIdFromUrl(url);
   }
 
   getPokemonTypes(url: string) {

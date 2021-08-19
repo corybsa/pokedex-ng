@@ -31,4 +31,8 @@ export class Helper {
             return object;
         }
     }
+
+    static getIdFromUrl(url: string): number {
+        return +url?.replace(/v2|\D/gi, '');
+    }
 }

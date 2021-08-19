@@ -7,6 +7,7 @@ import { NamedApiResourceList } from '../models/common/named-api-resource-list.m
 import * as moment from 'moment';
 import { PokemonTypesService } from './pokemon-types.service';
 import { Storage } from '../models/util/storage';
+import { Helper } from '../models/util/helper';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,7 @@ export class PokedexService {
     if(Storage.getPokemon() !== null) {
       const expireTime = Storage.getExpireTime();
 
-      if(moment().isAfter(expireTime)) {
+      if(moment().isBefore(expireTime)) {
         return new Observable(o => o.complete()); 
       }
     }
@@ -40,7 +41,7 @@ export class PokedexService {
     return this.http.get<NamedApiResourceList>(url).pipe(
       map(item => {
         for(const res of item.results) {
-          const id = +res.url.replace(/v2|\D/gi, '');
+          const id = Helper.getIdFromUrl(res.url);
 
           if(id >= 10000) {
             break;
@@ -65,7 +66,7 @@ export class PokedexService {
         const subs: Observable<Pokemon>[] = [];
 
         res.results.forEach(item => {
-          const id: number = +item.url.replace(/v2|\D/gi, '');
+          const id: number = Helper.getIdFromUrl(item.url);
           subs.push(this.typesService.getPokemonTypes(id));
         });
 
