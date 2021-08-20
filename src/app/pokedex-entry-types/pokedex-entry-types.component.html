@@ -1,0 +1,35 @@
+<mat-card *ngIf="quarterDamageFrom.length > 0" class="type-card">
+    <mat-card-title>25%</mat-card-title>
+    <mat-card-content>
+        <mat-chip-list>
+            <mat-chip *ngFor="let type of quarterDamageFrom" class="{{ type }} type">{{ capitalizeFirstLetter(type) }}</mat-chip>
+        </mat-chip-list>
+    </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="halfDamageFrom.length > 0" class="type-card">
+    <mat-card-title>50%</mat-card-title>
+    <mat-card-content>
+        <mat-chip-list>
+            <mat-chip *ngFor="let type of halfDamageFrom" class="{{ type }} type">{{ capitalizeFirstLetter(type) }}</mat-chip>
+        </mat-chip-list>
+    </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="normalDamageFrom.length > 0" class="type-card">
+    <mat-card-title>100%</mat-card-title>
+    <mat-card-content>
+        <mat-chip-list>
+            <mat-chip *ngFor="let type of normalDamageFrom" class="{{ type }} type">{{ capitalizeFirstLetter(type) }}</mat-chip>
+        </mat-chip-list>
+    </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="doubleDamageFrom.length > 0" class="type-card">
+    <mat-card-title>200%</mat-card-title>
+    <mat-card-content>
+        <mat-chip-list>
+            <mat-chip *ngFor="let type of doubleDamageFrom" class="{{ type }} type">{{ capitalizeFirstLetter(type) }}</mat-chip>
+        </mat-chip-list>
+    </mat-card-content>
+</mat-card>
