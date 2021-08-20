@@ -16,12 +16,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PokedexEntryComponent } from './pokedex-entry/pokedex-entry.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { PokedexEntryMovesComponent } from './pokedex-entry-moves/pokedex-entry-moves.component';
+import { PokedexEntryTypesComponent } from './pokedex-entry-types/pokedex-entry-types.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PokedexIndexComponent,
-    PokedexEntryComponent
+    PokedexEntryComponent,
+    PokedexEntryMovesComponent,
+    PokedexEntryTypesComponent
   ],
   imports: [
     BrowserModule,
