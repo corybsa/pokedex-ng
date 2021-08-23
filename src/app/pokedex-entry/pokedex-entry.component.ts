@@ -41,4 +41,13 @@ export class PokedexEntryComponent implements OnInit {
   back() {
     this.router.navigate(['/']);
   }
+
+  convertToFeet(height: number) {
+    const res = (12 * ((height * 0.3281) - Math.floor(height * 0.3281))).toFixed(1).split('.');
+    return `${res[0]}' ${res[1]}"`;
+  }
+
+  convertToPounds(weight: number) {
+    return (weight * 0.2205).toFixed(1);
+  }
 }
