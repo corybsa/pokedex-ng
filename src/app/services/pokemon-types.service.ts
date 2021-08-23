@@ -46,6 +46,7 @@ export class PokemonTypesService {
               { 'slot': 2, 'type': { 'name': 'unknown', url: 'https://pokeapi.co/api/v2/type/10001/' } }
             ]
           };
+          
           return res;
         }
 
