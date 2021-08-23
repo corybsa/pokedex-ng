@@ -1,14 +1,18 @@
 .container {
-    padding: 65px 15px 25px 15px;
+    padding: 15px 15px 25px 15px;
     background-color: white;
     min-height: calc(100% - 90px);
 }
 
-.back {
+mat-form-field {
+    width: 100%;
+}
+
+mat-card {
     cursor: pointer;
 }
 
 .mat-card-avatar {
-    height: 80px;
-    width: 80px;
+    height: 50px;
+    width: 50px;
 }

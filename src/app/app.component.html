@@ -1,16 +1,14 @@
 <mat-drawer-container>
     <mat-drawer #drawer mode="over">
-        <div class="nav-header">
-            <img src="../assets/icons/icon-192x192.png" height="50px" width="50px" alt="">
-        </div>
-        <div class="nav-item" (click)="goToPokedex()">
+        <div class="nav-header"></div>
+        <a routerLink="/pokedex" class="nav-item" (click)="drawer.close()">
             <mat-icon>search</mat-icon>
             <span>Pokedex</span>
-        </div>
-        <div class="nav-item">
+        </a>
+        <a routerLink="/typedex" class="nav-item" (click)="drawer.close()">
             <mat-icon>science</mat-icon>
             <span>Types</span>
-        </div>
+        </a>
         <div class="nav-separator"></div>
         <div class="nav-item" (click)="clearData()">
             <mat-icon>save</mat-icon>

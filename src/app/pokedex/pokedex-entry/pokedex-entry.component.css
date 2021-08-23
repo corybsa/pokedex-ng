@@ -1,0 +1,14 @@
+.container {
+    padding: 15px 15px 25px 15px;
+    background-color: white;
+    min-height: calc(100% - 90px);
+}
+
+.back {
+    cursor: pointer;
+}
+
+.mat-card-avatar {
+    height: 80px;
+    width: 80px;
+}

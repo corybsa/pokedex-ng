@@ -3,14 +3,14 @@ import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { concat, Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { NamedApiResourceList } from '../models/common/named-api-resource-list.model';
-import { NamedApiResource } from '../models/common/named-api-resource.model';
-import { Pokemon } from '../models/pokemon/pokemon.model';
-import { Helper } from '../models/util/helper';
-import { PokemonListItem } from '../models/util/pokemon-list-item.model';
-import { Storage } from '../models/util/storage';
-import { PokedexService } from '../services/pokedex.service';
-import { PokemonTypesService } from '../services/pokemon-types.service';
+import { NamedApiResourceList } from '../../models/common/named-api-resource-list.model';
+import { NamedApiResource } from '../../models/common/named-api-resource.model';
+import { Pokemon } from '../../models/pokemon/pokemon.model';
+import { Helper } from '../../models/util/helper';
+import { PokemonListItem } from '../../models/util/pokemon-list-item.model';
+import { Storage } from '../../models/util/storage';
+import { PokedexService } from '../../services/pokedex.service';
+import { PokemonTypesService } from '../../services/pokemon-types.service';
 
 @Component({
   selector: 'app-pokedex-index',

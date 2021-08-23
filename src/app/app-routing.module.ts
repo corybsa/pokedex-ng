@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PokedexEntryComponent } from './pokedex-entry/pokedex-entry.component';
-import { PokedexIndexComponent } from './pokedex-index/pokedex-index.component';
 
 const routes: Routes = [
   {
@@ -11,10 +9,11 @@ const routes: Routes = [
   },
   {
     path: 'pokedex',
-    children: [
-      { path: '', component: PokedexIndexComponent },
-      { path: ':id', component: PokedexEntryComponent }
-    ]
+    loadChildren: () => import('./pokedex/pokedex.module').then(m => m.PokdexModule)
+  },
+  {
+    path: 'typedex',
+    loadChildren: () => import('./typedex/typedex.module').then(m => m.TypedexModule)
   }
 ];
 

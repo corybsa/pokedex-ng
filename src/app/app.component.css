@@ -3,12 +3,15 @@ mat-drawer-container {
 }
 
 mat-drawer {
-    min-width: 50%;
+    min-width: 80%;
 }
 
 .nav-item {
+    display: block;
     margin-top: 10px;
     padding-left: 10px;
+    color: black;
+    text-decoration: none;
 }
 
 .nav-item span {
@@ -31,23 +34,23 @@ mat-drawer {
     height: 50px;
     background-color: #f44336;
     color: white;
-    position: fixed;
+    position: static;
     width: 100%;
     z-index: 10;
-    padding-top: 500px;
-    top: -500px;
 }
 
 .top-bar mat-icon {
-    position: fixed;
-    top: 13px;
-    left: 10px;
+    position: static;
+    cursor: pointer;
+    float: left;
+    margin-top: 13px;
+    margin-left: 13px;
 }
 
 .top-bar span {
     position: relative;
     top: 15px;
-    left: calc(50% - 30px);
+    left: calc(50% - 65px);
     display: inline-block;
     text-align: center;
 }

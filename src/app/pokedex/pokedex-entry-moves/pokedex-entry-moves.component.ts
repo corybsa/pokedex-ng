@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { Pokemon } from '../models/pokemon/pokemon.model';
-import { Helper } from '../models/util/helper';
+import { Pokemon } from '../../models/pokemon/pokemon.model';
+import { Helper } from '../../models/util/helper';
 import * as _ from 'underscore';
 
 @Component({

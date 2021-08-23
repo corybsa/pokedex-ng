@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Pokemon } from '../models/pokemon/pokemon.model';
-import { PokedexService } from '../services/pokedex.service';
+import { Pokemon } from '../../models/pokemon/pokemon.model';
+import { PokedexService } from '../../services/pokedex.service';
 import * as _ from 'underscore';
 
 @Component({

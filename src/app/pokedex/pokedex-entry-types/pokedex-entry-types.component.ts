@@ -1,13 +1,13 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { concat, Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { Pokemon } from '../models/pokemon/pokemon.model';
-import { TypeRelations } from '../models/pokemon/type-relations.model';
-import { Type } from '../models/pokemon/type.model';
-import { PokemonTypes } from '../models/util/pokemon-types.model';
-import { PokemonTypesService } from '../services/pokemon-types.service';
+import { Pokemon } from '../../models/pokemon/pokemon.model';
+import { TypeRelations } from '../../models/pokemon/type-relations.model';
+import { Type } from '../../models/pokemon/type.model';
+import { PokemonTypes } from '../../models/util/pokemon-types.model';
+import { PokemonTypesService } from '../../services/pokemon-types.service';
 import * as _ from 'underscore';
-import { Helper } from '../models/util/helper';
+import { Helper } from '../../models/util/helper';
 
 @Component({
   selector: 'app-pokedex-entry-types',
