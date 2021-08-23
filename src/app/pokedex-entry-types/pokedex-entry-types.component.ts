@@ -62,9 +62,6 @@ export class PokedexEntryTypesComponent implements OnInit, OnChanges {
   calculateWeaknesses() {
     // pokemon has two types
     if(this.damageRelations.length === 2) {
-      const pokemonType1 = this.pokemon.types[0].type.name;
-      const pokemonType2 = this.pokemon.types[1].type.name;
-
       const halfDamage1 = _.pluck(this.damageRelations[0].half_damage_from, 'name');
       const halfDamage2 = _.pluck(this.damageRelations[1].half_damage_from, 'name');
       const doubleDamage1 = _.pluck(this.damageRelations[0].double_damage_from, 'name');
