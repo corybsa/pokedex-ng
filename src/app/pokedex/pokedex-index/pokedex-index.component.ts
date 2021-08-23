@@ -67,6 +67,13 @@ export class PokedexIndexComponent implements OnInit {
 
     const pokemon: PokemonListItem = pokemonList.find(item => item.id === id)!;
 
+    if(!pokemon) {
+      return [
+        { 'slot': 1, 'type': { 'name': 'unknown', url: 'https://pokeapi.co/api/v2/type/10001/' } },
+        { 'slot': 2, 'type': { 'name': 'unknown', url: 'https://pokeapi.co/api/v2/type/10001/' } }
+      ];
+    }
+
     return pokemon.types;
   }
 

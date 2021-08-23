@@ -35,7 +35,20 @@ export class PokemonTypesService {
           return res;
         }
 
-        const pokemon = pokemonList.find(item => item.id === id)!;
+        let pokemon = pokemonList.find(item => item.id === id)!;
+
+        if(!pokemon) {
+          pokemon = {
+            id: res.id,
+            name: res.name,
+            types: [
+              { 'slot': 1, 'type': { 'name': 'unknown', url: 'https://pokeapi.co/api/v2/type/10001/' } },
+              { 'slot': 2, 'type': { 'name': 'unknown', url: 'https://pokeapi.co/api/v2/type/10001/' } }
+            ]
+          };
+          return res;
+        }
+
         pokemon.types = res.types;
 
         Storage.updatePokemonList(pokemon);

@@ -36,17 +36,12 @@ export class PokedexService {
       }
     }
 
-    const url = 'https://pokeapi.co/api/v2/pokemon?limit=-1';
+    const url = 'https://pokeapi.co/api/v2/pokemon?limit=9999999';
 
     return this.http.get<NamedApiResourceList>(url).pipe(
       map(item => {
         for(const res of item.results) {
           const id = Helper.getIdFromUrl(res.url);
-
-          if(id >= 10000) {
-            break;
-          }
-
           Storage.addPokemonToList({ id, name: res.name, types: [] });
         }
 

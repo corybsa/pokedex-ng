@@ -17,6 +17,6 @@ export class PokemonTypes {
         'ice',
         'dragon',
         'dark',
-        'fairy',
+        'fairy'
     ];
 }
