@@ -35,6 +35,7 @@
         [length]="pokemon.count"
         [pageSize]="getPageSize()"
         [pageIndex]="getCurrentPage()"
+        [showFirstLastButtons]="true"
         (page)="changePage($event)"
     ></mat-paginator>
 </div>
