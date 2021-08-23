@@ -36,7 +36,7 @@ export class PokedexEntryComponent implements OnInit {
 
   convertToFeet(height: number) {
     const feet = Math.floor(height * 0.3281);
-    const inches = Math.round((12 * ((height * 0.3281) - Math.floor(height * 0.3281))));
+    const inches = Math.round((12 * ((height * 0.3281) - feet)));
     return `${feet}' ${inches}"`;
   }
 
