@@ -1,1 +1,10 @@
-<p>pokedex-entry-moves works!</p>
+<mat-card *ngFor="let prop of moves | keyvalue" class="type-card">
+    <mat-card-title>{{ prop.key }}</mat-card-title>
+    <mat-card-content>
+        <ul style="list-style-type: none;">
+            <li *ngFor="let move of why(prop.value)">
+                <span>{{ move.level }} - {{ move.name }}</span>
+            </li>
+        </ul>
+    </mat-card-content>
+</mat-card>
