@@ -28,7 +28,7 @@ export class PokedexService {
   }
 
   private getAllPokemon(): Observable<NamedApiResourceList> {
-    if(Storage.getPokemon() !== null) {
+    if(Storage.getPokemonList() !== null) {
       const expireTime = Storage.getExpireTime();
 
       if(moment().isBefore(expireTime)) {
@@ -47,11 +47,11 @@ export class PokedexService {
             break;
           }
 
-          Storage.addPokemon({ id, name: res.name, types: [] });
+          Storage.addPokemonToList({ id, name: res.name, types: [] });
         }
 
         Storage.setExpireTime(moment().add(1, 'week').toDate());
-        Storage.savePokemon();
+        Storage.savePokemonList();
 
         return item;
       })
@@ -72,7 +72,7 @@ export class PokedexService {
 
         // execute subscriptions in order
         concat(...subs).pipe(
-          finalize(() => Storage.savePokemon())
+          finalize(() => Storage.savePokemonList())
         ).subscribe();
 
         return res;

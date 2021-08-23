@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { concat, Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { finalize, map, tap } from 'rxjs/operators';
 import { Pokemon } from '../models/pokemon/pokemon.model';
 import { TypeRelations } from '../models/pokemon/type-relations.model';
 import { Type } from '../models/pokemon/type.model';
@@ -20,16 +20,16 @@ export class PokemonTypesService {
 
   getPokemonTypes(id: number): Observable<Pokemon> {
     const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
-    const pokemonList: PokemonListItem[] = Storage.getPokemon();
+    const pokemonList: PokemonListItem[] = Storage.getPokemonList();
     const pokemon = pokemonList?.find(item => item.id === id)
 
-    if (pokemon && pokemon.types.length > 0) {
+    if(pokemon && pokemon.types.length > 0) {
       return new Observable(o => o.complete());
     }
 
     return this.http.get<Pokemon>(url).pipe(
       map((res: Pokemon) => {
-        const pokemonList: PokemonListItem[] = Storage.getPokemon();
+        const pokemonList: PokemonListItem[] = Storage.getPokemonList();
 
         if (!pokemonList) {
           return res;
@@ -38,7 +38,7 @@ export class PokemonTypesService {
         const pokemon = pokemonList.find(item => item.id === id)!;
         pokemon.types = res.types;
 
-        Storage.updatePokemon(pokemon);
+        Storage.updatePokemonList(pokemon);
 
         return res;
       })
@@ -46,8 +46,21 @@ export class PokemonTypesService {
   }
 
   getType(id: number): Observable<Type> {
+    const type = Storage.getType(id);
+    
+    if(type !== undefined) {
+      return new Observable(o => {
+        o.next(type);
+        o.complete();
+      });
+    }
+
     const url = `https://pokeapi.co/api/v2/type/${id}`;
 
-    return this.http.get<Type>(url);
+    return this.http.get<Type>(url).pipe(
+      tap(res => {
+        Storage.setType(res);
+      })
+    );
   }
 }

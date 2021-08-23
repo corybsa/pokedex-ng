@@ -59,7 +59,7 @@ export class PokedexIndexComponent implements OnInit {
 
   getPokemonTypes(url: string) {
     const id = this.getIdFromUrl(url);
-    const pokemonList: PokemonListItem[] = Storage.getPokemon();
+    const pokemonList: PokemonListItem[] = Storage.getPokemonList();
 
     if(!pokemonList) {
       return [];
@@ -112,7 +112,7 @@ export class PokedexIndexComponent implements OnInit {
   }
 
   private populateSearchResults(searchTerm: string) {
-    let pokemonList: PokemonListItem[] = Storage.getPokemon();
+    let pokemonList: PokemonListItem[] = Storage.getPokemonList();
       const regex = new RegExp(searchTerm, 'gi');
       pokemonList = pokemonList.filter(item => item.name.match(regex));
       const subs: Observable<Pokemon>[] = [];
@@ -127,7 +127,7 @@ export class PokedexIndexComponent implements OnInit {
       });
 
       concat(...subs).pipe(
-        finalize(() => Storage.savePokemon())
+        finalize(() => Storage.savePokemonList())
       ).subscribe();
 
       this.isSearching = true;

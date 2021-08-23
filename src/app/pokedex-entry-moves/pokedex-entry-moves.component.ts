@@ -44,17 +44,13 @@ export class PokedexEntryMovesComponent implements OnInit, OnChanges {
           this.moves[detail.version_group.name][detail.move_learn_method.name][detail.level_learned_at] = move.move.name;
         } else if(detail.move_learn_method.name === 'machine') {
           this.moves[detail.version_group.name][detail.move_learn_method.name][Helper.getIdFromUrl(move.move.url)] = move.move.name;
-        } else if(detail.move_learn_method.name === 'tutor') {
+        } else {
           this.moves[detail.version_group.name][detail.move_learn_method.name].push(move.move.name);
         }
       }
     }
     
     console.log(this.moves);
-  }
-
-  test(e: any) {
-    console.log(e);
   }
 
   why(e: any) {

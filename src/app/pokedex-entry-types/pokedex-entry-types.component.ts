@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { concat, Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { Pokemon } from '../models/pokemon/pokemon.model';

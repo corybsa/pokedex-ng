@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Pokemon } from '../models/pokemon/pokemon.model';
-import { TypeRelations } from '../models/pokemon/type-relations.model';
-import { Helper } from '../models/util/helper';
 import { PokedexService } from '../services/pokedex.service';
-import { PokemonTypesService } from '../services/pokemon-types.service';
 import * as _ from 'underscore';
 
 @Component({
@@ -14,11 +11,6 @@ import * as _ from 'underscore';
 })
 export class PokedexEntryComponent implements OnInit {
   pokemon!: Pokemon;
-  damageRelations: TypeRelations[] = [];
-  quarterDamageFrom: string[] = [];
-  halfDamageFrom: string[] = [];
-  normalDamageFrom: string[] = [];
-  doubleDamageFrom: string[] = [];
 
   constructor(
     private service: PokedexService,
