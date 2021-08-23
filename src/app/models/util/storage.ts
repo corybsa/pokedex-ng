@@ -1,16 +1,26 @@
 import * as moment from "moment";
+import { Pokemon } from "../pokemon/pokemon.model";
 import { Type } from "../pokemon/type.model";
 import { PokemonListItem } from "./pokemon-list-item.model";
 
 export class Storage {
     static Keys = {
         expireTime: 'expire',
-        pokemonList: 'pokemon',
+        pokemonList: 'pokemonList',
+        pokemon: 'pokemon',
         types: 'types'
     };
 
     private static pokemonList: PokemonListItem[];
     private static wasUpdated = false;
+
+    static getExpireTime(): moment.Moment {
+        return moment(localStorage.getItem(this.Keys.expireTime));
+    }
+
+    static setExpireTime(datetime: Date): void {
+        localStorage.setItem(this.Keys.expireTime, datetime.toISOString());
+    }
 
     static getPokemonList(): PokemonListItem[] {
         if(!this.pokemonList || this.wasUpdated) {
@@ -46,20 +56,28 @@ export class Storage {
         localStorage.setItem(this.Keys.pokemonList, JSON.stringify(this.pokemonList));
     }
 
-    static getExpireTime(): moment.Moment {
-        return moment(localStorage.getItem(this.Keys.expireTime));
+    static getPokemon(id: number): Pokemon | undefined {
+        const pokemon: Pokemon[] = JSON.parse(localStorage.getItem(this.Keys.pokemon) as string);
+        return pokemon?.find(item => item.id === id);
     }
 
-    static setExpireTime(datetime: Date): void {
-        localStorage.setItem(this.Keys.expireTime, datetime.toISOString());
+    static addPokemon(pokemon: Pokemon) {
+        let p = JSON.parse(localStorage.getItem(this.Keys.pokemon) as string);
+
+        if(!p) {
+            p = [];
+        }
+
+        p.push(pokemon);
+        localStorage.setItem(this.Keys.pokemon, JSON.stringify(p));
     }
 
-    static getType(id: number) {
+    static getType(id: number): Type | undefined {
         const types: Type[] = JSON.parse(localStorage.getItem(this.Keys.types) as string);
         return types?.find(item => item.id === id);
     }
 
-    static setType(type: Type) {
+    static addType(type: Type) {
         let types = JSON.parse(localStorage.getItem(this.Keys.types) as string);
 
         if(!types) {
@@ -67,7 +85,6 @@ export class Storage {
         }
 
         types.push(type);
-
         localStorage.setItem(this.Keys.types, JSON.stringify(types));
     }
 }

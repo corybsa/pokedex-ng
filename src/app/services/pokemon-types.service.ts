@@ -59,7 +59,7 @@ export class PokemonTypesService {
 
     return this.http.get<Type>(url).pipe(
       tap(res => {
-        Storage.setType(res);
+        Storage.addType(res);
       })
     );
   }

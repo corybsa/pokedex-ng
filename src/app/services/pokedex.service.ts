@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { concat, Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { finalize, map, tap } from 'rxjs/operators';
 import { Pokemon } from '../models/pokemon/pokemon.model';
 import { NamedApiResourceList } from '../models/common/named-api-resource-list.model';
 import * as moment from 'moment';
@@ -32,7 +32,7 @@ export class PokedexService {
       const expireTime = Storage.getExpireTime();
 
       if(moment().isBefore(expireTime)) {
-        return new Observable(o => o.complete()); 
+        return new Observable(o => o.complete());
       }
     }
 
@@ -99,8 +99,19 @@ export class PokedexService {
   }
 
   getPokemon(id: number): Observable<Pokemon> {
+    const pokemon = Storage.getPokemon(id);
+
+    if(pokemon) {
+      return new Observable(o => {
+        o.next(pokemon);
+        o.complete();
+      });
+    }
+
     const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
 
-    return this.http.get<Pokemon>(url);
+    return this.http.get<Pokemon>(url).pipe(
+      tap(res => Storage.addPokemon(res))
+    );
   }
 }
