@@ -16,6 +16,17 @@ mat-drawer {
     top: -6px;
 }
 
+.nav-header {
+    height: 50px;
+    background-color: #f44336;
+}
+
+.nav-separator {
+    height: 1px;
+    background-color: hsl(0, 0%, 83%);
+    margin: 10px 5px 0px;
+}
+
 .top-bar {
     height: 50px;
     background-color: #f44336;
