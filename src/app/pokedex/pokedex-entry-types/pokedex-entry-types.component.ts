@@ -44,6 +44,14 @@ export class PokedexEntryTypesComponent implements OnInit, OnChanges {
   }
 
   getDamageRelations(type1: number, type2: number) {
+    this.damageRelations = [];
+    this.quarterDamageFrom = [];
+    this.halfDamageFrom = [];
+    this.normalDamageFrom = [];
+    this.doubleDamageFrom = [];
+    this.quadDamageFrom = [];
+    this.noDamageFrom = [];
+
     const subs: Observable<Type>[] = [];
 
     if(type1) {

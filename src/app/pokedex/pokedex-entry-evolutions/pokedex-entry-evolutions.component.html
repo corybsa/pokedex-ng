@@ -1,0 +1,7 @@
+<div>
+    <p>Evolutions:</p>
+    <div *ngFor="let evo of evolutions" style="display: inline-block; text-align: center; width: 33%;" (click)="goToEntry(evo.id)">
+        <img [src]="evo.image" height="50px" width="50px" style="display: block; margin: auto">
+        <span>{{ capitalizeFirstLetter(evo.name) }}({{ evo.level }})</span>
+    </div>
+</div>

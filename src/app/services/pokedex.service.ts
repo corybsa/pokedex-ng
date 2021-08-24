@@ -8,6 +8,8 @@ import * as moment from 'moment';
 import { PokemonTypesService } from './pokemon-types.service';
 import { Storage } from '../models/util/storage';
 import { Helper } from '../models/util/helper';
+import { PokemonSpecies } from '../models/pokemon/pokemon-species.model';
+import { EvolutionChain } from '../models/evolution/evolution-chain.model';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +41,7 @@ export class PokedexService {
     const url = 'https://pokeapi.co/api/v2/pokemon?limit=9999999';
 
     return this.http.get<NamedApiResourceList>(url).pipe(
-      map(item => {
+      tap(item => {
         for(const res of item.results) {
           const id = Helper.getIdFromUrl(res.url);
           Storage.addPokemonToList({ id, name: res.name, types: [] });
@@ -57,7 +59,7 @@ export class PokedexService {
     const url = `https://pokeapi.co/api/v2/pokemon?offset=${this.offset}&limit=${this.pageSize}`;
 
     return this.http.get<NamedApiResourceList>(url).pipe(
-      map(res => {
+      tap(res => {
         const subs: Observable<Pokemon>[] = [];
 
         res.results.forEach(item => {
@@ -107,6 +109,22 @@ export class PokedexService {
 
     return this.http.get<Pokemon>(url).pipe(
       tap(res => Storage.addPokemon(res))
+    );
+  }
+
+  getSpeciesInfo(url: string): Observable<PokemonSpecies> {
+    return this.http.get<PokemonSpecies>(url).pipe(
+      tap(res => {
+
+      })
+    );
+  }
+
+  getEvolutionChain(url: string): Observable<EvolutionChain> {
+    return this.http.get<EvolutionChain>(url).pipe(
+      tap(res => {
+
+      })
     );
   }
 }

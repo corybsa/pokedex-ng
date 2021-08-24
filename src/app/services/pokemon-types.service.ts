@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { concat, Observable } from 'rxjs';
-import { finalize, map, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { Pokemon } from '../models/pokemon/pokemon.model';
-import { TypeRelations } from '../models/pokemon/type-relations.model';
 import { Type } from '../models/pokemon/type.model';
-import { Helper } from '../models/util/helper';
 import { PokemonListItem } from '../models/util/pokemon-list-item.model';
 import { Storage } from '../models/util/storage';
 
@@ -28,7 +26,7 @@ export class PokemonTypesService {
     }
 
     return this.http.get<Pokemon>(url).pipe(
-      map((res: Pokemon) => {
+      tap((res: Pokemon) => {
         const pokemonList: PokemonListItem[] = Storage.getPokemonList();
 
         if (!pokemonList) {
@@ -46,7 +44,7 @@ export class PokemonTypesService {
               { 'slot': 2, 'type': { 'name': 'unknown', url: 'https://pokeapi.co/api/v2/type/10001/' } }
             ]
           };
-          
+
           return res;
         }
 
@@ -72,9 +70,7 @@ export class PokemonTypesService {
     const url = `https://pokeapi.co/api/v2/type/${id}`;
 
     return this.http.get<Type>(url).pipe(
-      tap(res => {
-        Storage.addType(res);
-      })
+      tap(res => Storage.addType(res))
     );
   }
 }

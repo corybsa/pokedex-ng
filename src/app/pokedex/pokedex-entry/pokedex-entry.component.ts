@@ -17,13 +17,18 @@ export class PokedexEntryComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    const id = +this.route.snapshot.params['id'];
-    this.service.getPokemon(id).subscribe(p => {
-      this.pokemon = p;
+    this.route.params.subscribe(values => {
+      this.getPokemonData(+values.id);
     });
   }
 
   ngOnInit(): void {
+  }
+
+  getPokemonData(id: number) {
+    this.service.getPokemon(id).subscribe(p => {
+      this.pokemon = p;
+    });
   }
 
   capitalizeFirstLetter(str: string) {

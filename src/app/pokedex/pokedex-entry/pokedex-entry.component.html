@@ -24,6 +24,7 @@
         <mat-card-content>
             <p>Height: {{ (pokemon.height / 10).toFixed(1) }} m / {{ convertToFeet(pokemon.height) }}</p>
             <p>Weight: {{ (pokemon.weight / 10).toFixed(1) }} kg / {{ convertToPounds(pokemon.weight) }} lbs.</p>
+            <app-pokedex-entry-evolutions [pokemon]="pokemon"></app-pokedex-entry-evolutions>
         </mat-card-content>
     </mat-card>
 
