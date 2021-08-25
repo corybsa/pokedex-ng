@@ -34,6 +34,7 @@ export class PokedexEntryEvolutionsComponent implements OnInit, OnChanges {
           const id = Helper.getIdFromUrl(this.evolutionChain.chain.species.url);
           this.addEvolution(id, this.evolutionChain.chain.species.name, 0);
           this.getEvolutions(this.evolutionChain.chain);
+          console.log(this.evolutions);
         });
       });
     }
@@ -51,6 +52,7 @@ export class PokedexEntryEvolutionsComponent implements OnInit, OnChanges {
     }
   }
 
+  // TODO: handle different methods of evolution
   addEvolution(id: number, name: string, level: number) {
     this.evolutions.push({
       id: id,
