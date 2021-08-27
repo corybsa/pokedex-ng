@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Pokemon } from '../../models/pokemon/pokemon.model';
 import { PokedexService } from '../../services/pokedex.service';
 import * as _ from 'underscore';
+import { Pokemon } from 'src/app/models/pokemon/pokemon.model';
 
 @Component({
   selector: 'app-pokedex-entry',
@@ -26,13 +26,7 @@ export class PokedexEntryComponent implements OnInit {
   }
 
   getPokemonData(id: number) {
-    this.service.getPokemon(id).subscribe(p => {
-      this.pokemon = p;
-    });
-  }
-
-  capitalizeFirstLetter(str: string) {
-    return str.substr(0, 1).toUpperCase() + str.substr(1);
+    this.service.getPokemon(id).subscribe(p => this.pokemon = p);
   }
 
   back() {
@@ -47,5 +41,9 @@ export class PokedexEntryComponent implements OnInit {
 
   convertToPounds(weight: number) {
     return (weight * 0.2205).toFixed(1);
+  }
+
+  doSomethingWithTypes(id: number) {
+    console.log(id);
   }
 }

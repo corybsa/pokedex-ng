@@ -1,4 +1,4 @@
-<div class="container" *ngIf="pokemon">
+<div class="container" *ngIf="page">
     <mat-form-field class="example-full-width" appearance="fill">
         <mat-label>Search</mat-label>
         <input #search matInput (keyup)="searchList(search.value)">
@@ -7,32 +7,19 @@
         </button>
     </mat-form-field>
 
-    <mat-card *ngFor="let monster of pokemon.results" style="margin-bottom: 10px;" (click)="goToPokemon(monster.url)">
+    <mat-card *ngFor="let monster of page" style="margin-bottom: 10px;" (click)="goToPokemon(monster.id)">
         <mat-card-header>
-            <img mat-card-avatar [src]="getPokemonImageUrl(monster.url)" [alt]="capitalizeFirstLetter(monster.name)">
-            <mat-card-title>{{ capitalizeFirstLetter(monster.name) }}</mat-card-title>
+            <img mat-card-avatar [src]="getPokemonImageUrl(monster.id)" [alt]="monster.localeName">
+            <mat-card-title>{{ monster.localeName }} - No. {{ monster.id }}</mat-card-title>
             <mat-card-subtitle>
-                <mat-chip-list>
-                    <mat-chip
-                        *ngIf="getPokemonTypes(monster.url)[0]"
-                        class="{{ getPokemonTypes(monster.url)[0].type.name }} type"
-                    >
-                        {{ capitalizeFirstLetter(getPokemonTypes(monster.url)[0].type.name) }}
-                    </mat-chip>
-                    <mat-chip
-                        *ngIf="getPokemonTypes(monster.url)[1]"
-                        class="{{ getPokemonTypes(monster.url)[1].type.name }} type"
-                    >
-                        {{ capitalizeFirstLetter(getPokemonTypes(monster.url)[1].type.name) }}
-                    </mat-chip>
-                </mat-chip-list>
+                <app-type-list [types]="monster.types"></app-type-list>
             </mat-card-subtitle>
         </mat-card-header>
     </mat-card>
 
     <mat-paginator
         *ngIf="!isSearching"
-        [length]="pokemon.count"
+        [length]="pokemon.length"
         [pageSize]="getPageSize()"
         [pageIndex]="getCurrentPage()"
         [showFirstLastButtons]="true"

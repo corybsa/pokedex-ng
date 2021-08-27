@@ -1,7 +1,32 @@
 <div>
-    <p>Evolutions:</p>
-    <div *ngFor="let evo of evolutions" style="display: inline-block; text-align: center; width: 33%;" (click)="goToEntry(evo.id)">
-        <img [src]="evo.image" height="50px" width="50px" style="display: block; margin: auto">
-        <span>{{ capitalizeFirstLetter(evo.name) }}({{ evo.level }})</span>
+    <p><strong>Evolutions:</strong></p>
+    <div class="container container-{{ evolutions.length }}-stages">
+        <ng-container *ngFor="let evo of evolutions">
+            <ng-container [ngSwitch]="evo.evolutionTriggerId">
+                <div class="evo-stage-indicator" *ngSwitchCase="evoTrigger.LevelUp">
+                    <span *ngIf="evo.minLevel">Lv. {{ evo.minLevel }}</span>
+                    <span *ngIf="evo.minHappiness || evo.minAffection">Level up with high happiness</span>
+                    <span *ngIf="evo.knownMoveTypeId">and know a {{ evo.knownMoveTypeName }} type move</span>
+                    <span *ngIf="evo.timeOfDay !== ''">during the {{ evo.timeOfDay }}</span>
+                </div>
+                <div class="evo-stage-indicator" *ngSwitchCase="evoTrigger.Trade">
+                    <span>Trade</span>
+                    <span *ngIf="evo.heldItemId"> holding {{ evo.heldItemName }}</span>
+                </div>
+                <div class="evo-stage-indicator" *ngSwitchCase="evoTrigger.UseItem">
+                    <span>Use {{ evo.evolutionItemName }}</span>
+                </div>
+                <div class="evo-stage-indicator" *ngSwitchCase="evoTrigger.Shed">
+                    <span>Shed?</span>
+                </div>
+                <div class="evo-stage-indicator" *ngSwitchCase="evoTrigger.Other">
+                    <span>Other?</span>
+                </div>
+            </ng-container>
+
+            <div class="evo-stage" (click)="goToEntry(evo.pokemonId)">
+                <img [src]="evo.pokemonSprite" [alt]="evo.pokemonName">
+            </div>
+        </ng-container>
     </div>
 </div>

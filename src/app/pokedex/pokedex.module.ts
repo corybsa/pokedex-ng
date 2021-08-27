@@ -15,6 +15,7 @@ import { PokedexEntryComponent } from './pokedex-entry/pokedex-entry.component';
 import { PokedexEntryMovesComponent } from './pokedex-entry-moves/pokedex-entry-moves.component';
 import { PokedexEntryTypesComponent } from './pokedex-entry-types/pokedex-entry-types.component';
 import { PokedexEntryEvolutionsComponent } from './pokedex-entry-evolutions/pokedex-entry-evolutions.component';
+import { TypeListComponent } from './type-list/type-list.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { PokedexEntryEvolutionsComponent } from './pokedex-entry-evolutions/poke
     PokedexEntryComponent,
     PokedexEntryMovesComponent,
     PokedexEntryTypesComponent,
-    PokedexEntryEvolutionsComponent
+    PokedexEntryEvolutionsComponent,
+    TypeListComponent
   ],
   imports: [
     CommonModule,

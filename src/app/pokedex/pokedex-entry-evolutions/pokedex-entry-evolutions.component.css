@@ -1,0 +1,47 @@
+.container {
+    display: grid;
+}
+
+.container .evo-stage {
+    justify-self: center;
+    align-self: center;
+}
+
+.container .evo-stage-indicator {
+    justify-self: center;
+    align-self: center;
+}
+
+.container .evo-stage-indicator span {
+    display: block;
+    text-align: center;
+}
+
+/* 2 stage evolution */
+.container.container-2-stages {
+    grid-template-columns: repeat(14, 14fr);
+}
+
+.container.container-2-stages .evo-stage-indicator {
+    grid-column: span 2;
+}
+
+.container.container-2-stages .evo-stage {
+    grid-column: span 6;
+}
+
+/* 3 stage evolution */
+.container.container-3-stages,
+.container.container-9-stages {
+    grid-template-columns: repeat(13, 13fr);
+}
+
+.container.container-3-stages .evo-stage-indicator,
+.container.container-9-stages .evo-stage-indicator {
+    grid-column: span 2;
+}
+
+.container.container-3-stages .evo-stage,
+.container.container-9-stages .evo-stage {
+    grid-column: span 3;
+}

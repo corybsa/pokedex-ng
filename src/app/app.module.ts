@@ -10,6 +10,7 @@ import { TypedexModule } from './typedex/typedex.module';
 import { PokdexModule } from './pokedex/pokedex.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { GraphQLModule } from './graphql.module';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
       // Register the ServiceWorker as soon as the app is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
-    })
+    }),
+    GraphQLModule
   ],
   providers: [],
   bootstrap: [AppComponent]

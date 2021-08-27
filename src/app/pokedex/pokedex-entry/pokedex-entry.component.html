@@ -2,28 +2,15 @@
     <mat-icon class="back" (click)="back()">arrow_back_ios</mat-icon>
     <mat-card *ngIf="pokemon" style="margin-bottom: 10px;">
         <mat-card-header>
-            <img mat-card-avatar [src]="pokemon.sprites.front_default" [alt]="capitalizeFirstLetter(pokemon.name)">
-            <mat-card-title>{{ capitalizeFirstLetter(pokemon.name) }}</mat-card-title>
+            <img mat-card-avatar [src]="pokemon.spriteUrl" [alt]="pokemon.localeName">
+            <mat-card-title>{{ pokemon.localeName }}</mat-card-title>
             <mat-card-subtitle>
-                <mat-chip-list>
-                    <mat-chip
-                        *ngIf="pokemon.types[0]"
-                        class="{{ pokemon.types[0].type.name }} type"
-                    >
-                        {{ capitalizeFirstLetter(pokemon.types[0].type.name) }}
-                    </mat-chip>
-                    <mat-chip
-                        *ngIf="pokemon.types[1]"
-                        class="{{ pokemon.types[1].type.name }} type"
-                    >
-                        {{ capitalizeFirstLetter(pokemon.types[1].type.name) }}
-                    </mat-chip>
-                </mat-chip-list>
+                <app-type-list [types]="pokemon.types"></app-type-list>
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <p>Height: {{ (pokemon.height / 10).toFixed(1) }} m / {{ convertToFeet(pokemon.height) }}</p>
-            <p>Weight: {{ (pokemon.weight / 10).toFixed(1) }} kg / {{ convertToPounds(pokemon.weight) }} lbs.</p>
+            <p><strong>Height:</strong> {{ (pokemon.height / 10).toFixed(1) }} m / {{ convertToFeet(pokemon.height) }}</p>
+            <p><strong>Weight:</strong> {{ (pokemon.weight / 10).toFixed(1) }} kg / {{ convertToPounds(pokemon.weight) }} lbs.</p>
             <app-pokedex-entry-evolutions [pokemon]="pokemon"></app-pokedex-entry-evolutions>
         </mat-card-content>
     </mat-card>
@@ -34,7 +21,7 @@
                 <mat-tab label="Damage taken">
                     <app-pokedex-entry-types [pokemon]="pokemon"></app-pokedex-entry-types>
                 </mat-tab>
-                <mat-tab label="Moves">
+                <mat-tab label="Learned Moves">
                     <app-pokedex-entry-moves [pokemon]="pokemon"></app-pokedex-entry-moves>
                 </mat-tab>
                 <mat-tab label="Abilities">

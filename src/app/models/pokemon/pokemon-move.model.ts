@@ -1,7 +1,12 @@
-import { NamedApiResource } from "../common/named-api-resource.model";
-import { PokemonMoveVersion } from "./pokemon-move-version.model";
+import { PokemonType } from "./pokemon-type.model";
 
 export interface PokemonMove {
-    move: NamedApiResource;
-    version_group_details: PokemonMoveVersion[];
+    localeName: string;
+    type: PokemonType;
+    localeEffect: string;
+    localeClass: string;
+    levelLearned: number;
+    power: number;
+    powerPoints: number;
+    accuracy: number;
 }

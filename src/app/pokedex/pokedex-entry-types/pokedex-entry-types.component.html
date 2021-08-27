@@ -1,53 +1,41 @@
-<mat-card *ngIf="quadDamageFrom.length > 0" class="type-card">
+<mat-card *ngIf="types.quadDamage.length > 0" class="type-card">
     <mat-card-title>400%</mat-card-title>
     <mat-card-content>
-        <mat-chip-list>
-            <mat-chip *ngFor="let type of quadDamageFrom" class="{{ type }} type">{{ capitalizeFirstLetter(type) }}</mat-chip>
-        </mat-chip-list>
+        <app-type-list [types]="types.quadDamage"></app-type-list>
     </mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="doubleDamageFrom.length > 0" class="type-card">
+<mat-card *ngIf="types.doubleDamage.length > 0" class="type-card">
     <mat-card-title>200%</mat-card-title>
     <mat-card-content>
-        <mat-chip-list>
-            <mat-chip *ngFor="let type of doubleDamageFrom" class="{{ type }} type">{{ capitalizeFirstLetter(type) }}</mat-chip>
-        </mat-chip-list>
+        <app-type-list [types]="types.doubleDamage"></app-type-list>
     </mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="normalDamageFrom.length > 0" class="type-card">
+<mat-card *ngIf="types.normalDamage.length > 0" class="type-card">
     <mat-card-title>100%</mat-card-title>
     <mat-card-content>
-        <mat-chip-list>
-            <mat-chip *ngFor="let type of normalDamageFrom" class="{{ type }} type">{{ capitalizeFirstLetter(type) }}</mat-chip>
-        </mat-chip-list>
+        <app-type-list [types]="types.normalDamage"></app-type-list>
     </mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="halfDamageFrom.length > 0" class="type-card">
+<mat-card *ngIf="types.halfDamage.length > 0" class="type-card">
     <mat-card-title>50%</mat-card-title>
     <mat-card-content>
-        <mat-chip-list>
-            <mat-chip *ngFor="let type of halfDamageFrom" class="{{ type }} type">{{ capitalizeFirstLetter(type) }}</mat-chip>
-        </mat-chip-list>
+        <app-type-list [types]="types.halfDamage"></app-type-list>
     </mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="quarterDamageFrom.length > 0" class="type-card">
+<mat-card *ngIf="types.quarterDamage.length > 0" class="type-card">
     <mat-card-title>25%</mat-card-title>
     <mat-card-content>
-        <mat-chip-list>
-            <mat-chip *ngFor="let type of quarterDamageFrom" class="{{ type }} type">{{ capitalizeFirstLetter(type) }}</mat-chip>
-        </mat-chip-list>
+        <app-type-list [types]="types.quarterDamage"></app-type-list>
     </mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="noDamageFrom.length > 0" class="type-card">
+<mat-card *ngIf="types.zeroDamage.length > 0" class="type-card">
     <mat-card-title>0%</mat-card-title>
     <mat-card-content>
-        <mat-chip-list>
-            <mat-chip *ngFor="let type of noDamageFrom" class="{{ type }} type">{{ capitalizeFirstLetter(type) }}</mat-chip>
-        </mat-chip-list>
+        <app-type-list [types]="types.zeroDamage"></app-type-list>
     </mat-card-content>
 </mat-card>

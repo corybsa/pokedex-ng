@@ -35,4 +35,8 @@ export class Helper {
     static getIdFromUrl(url: string): number {
         return +url?.replace(/v2|\D/gi, '');
     }
+
+    static capitalizeFirstLetter(str: string) {
+      return str.substr(0, 1).toUpperCase() + str.substr(1);
+    }
 }

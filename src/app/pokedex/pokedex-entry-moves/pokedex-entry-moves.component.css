@@ -1,3 +1,16 @@
 .type-card {
     margin: 0 1px 10px 1px;
 }
+
+.move-container {
+    display: grid;
+}
+
+.move-container .move-info {
+    grid-column: span 1;
+}
+
+.move-container .move-effect {
+    grid-column: span 2;
+    margin-top: 10px;
+}

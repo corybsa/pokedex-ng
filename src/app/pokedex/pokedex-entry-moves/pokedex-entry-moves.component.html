@@ -1,10 +1,19 @@
-<mat-card *ngFor="let prop of moves | keyvalue" class="type-card">
-    <mat-card-title>{{ prop.key }}</mat-card-title>
+<mat-card *ngFor="let move of moves" class="type-card">
+    <mat-card-title>
+        <span *ngIf="move.levelLearned === 0">Evolve</span>
+        <span *ngIf="move.levelLearned > 0">Lv. {{ move.levelLearned }}</span>
+        - {{ move.localeName }}
+    </mat-card-title>
+    <mat-card-subtitle>
+        <app-type-list [types]="[move.type]"></app-type-list>
+    </mat-card-subtitle>
     <mat-card-content>
-        <ul style="list-style-type: none;">
-            <li *ngFor="let move of why(prop.value)">
-                <span>{{ move.level }} - {{ move.name }}</span>
-            </li>
-        </ul>
+        <div class="move-container" style="display: grid; grid-template-columns: repeat(2, 2fr);">
+            <span class="move-info"><strong>Power:</strong> {{ move.power || '--' }}</span>
+            <span class="move-info"><strong>PP:</strong> {{ move.powerPoints }}</span>
+            <span class="move-info"><strong>Accuracy:</strong> {{ move.accuracy || '--' }}</span>
+            <span class="move-info"><strong>Type:</strong> {{ move.localeClass }}</span>
+            <span class="move-effect"><strong>Effect:</strong> {{ move.localeEffect }}</span>
+        </div>
     </mat-card-content>
 </mat-card>

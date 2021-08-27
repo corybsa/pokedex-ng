@@ -1,129 +1,274 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { concat, Observable } from 'rxjs';
-import { finalize, map, tap } from 'rxjs/operators';
-import { Pokemon } from '../models/pokemon/pokemon.model';
-import { NamedApiResourceList } from '../models/common/named-api-resource-list.model';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import * as moment from 'moment';
-import { PokemonTypesService } from './pokemon-types.service';
 import { Storage } from '../models/util/storage';
-import { Helper } from '../models/util/helper';
-import { PokemonSpecies } from '../models/pokemon/pokemon-species.model';
-import { EvolutionChain } from '../models/evolution/evolution-chain.model';
+import { Apollo, gql } from 'apollo-angular';
+import { PokemonListItem } from '../models/pokemon/pokemon-list-item.model';
+import { PokemonType } from '../models/pokemon/pokemon-type.model';
+import { Pokemon } from '../models/pokemon/pokemon.model';
+import { PokemonEvolution } from '../models/pokemon/pokemon-evolution.model';
+import * as _ from 'underscore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PokedexService {
-  public page: number = 0;
-  public pageSize: number = 20;
-
-  private get offset(): number {
-    return this.page * this.pageSize;
-  };
-
   constructor(
-    private http: HttpClient,
-    private typesService: PokemonTypesService
-  ) {
-    this.getAllPokemon().subscribe();
-  }
+    private apollo: Apollo,
+    private storage: Storage
+  ) {}
 
-  private getAllPokemon(): Observable<NamedApiResourceList> {
-    if(Storage.getPokemonList() !== null) {
-      const expireTime = Storage.getExpireTime();
+  getPokemonList(): Observable<PokemonListItem[]> {
+    const list = this.storage.getPokemonList();
 
-      if(moment().isBefore(expireTime)) {
-        return new Observable(o => o.complete());
-      }
-    }
-
-    const url = 'https://pokeapi.co/api/v2/pokemon?limit=9999999';
-
-    return this.http.get<NamedApiResourceList>(url).pipe(
-      tap(item => {
-        for(const res of item.results) {
-          const id = Helper.getIdFromUrl(res.url);
-          Storage.addPokemonToList({ id, name: res.name, types: [] });
-        }
-
-        Storage.setExpireTime(moment().add(1, 'week').toDate());
-        Storage.savePokemonList();
-
-        return item;
-      })
-    );
-  }
-
-  getPokemonList(): Observable<NamedApiResourceList> {
-    const url = `https://pokeapi.co/api/v2/pokemon?offset=${this.offset}&limit=${this.pageSize}`;
-
-    return this.http.get<NamedApiResourceList>(url).pipe(
-      tap(res => {
-        const subs: Observable<Pokemon>[] = [];
-
-        res.results.forEach(item => {
-          const id: number = Helper.getIdFromUrl(item.url);
-          subs.push(this.typesService.getPokemonTypes(id));
-        });
-
-        // execute subscriptions in order
-        concat(...subs).pipe(
-          finalize(() => Storage.savePokemonList())
-        ).subscribe();
-
-        return res;
-      })
-    );
-  }
-
-  getNextPage(): Observable<NamedApiResourceList> {
-    this.page++;
-    return this.getPokemonList();
-  }
-
-  getPreviousPage(): Observable<NamedApiResourceList> {
-    if(this.page > 1) {
-      this.page--;
-    }
-
-    return this.getPokemonList();
-  }
-
-  getPage(pageNum: number): Observable<NamedApiResourceList> {
-    this.page = pageNum;
-    return this.getPokemonList();
-  }
-
-  getPokemon(id: number): Observable<Pokemon> {
-    const pokemon = Storage.getPokemon(id);
-
-    if(pokemon) {
+    if(list) {
       return new Observable(o => {
-        o.next(pokemon);
+        o.next(list);
         o.complete();
       });
     }
 
-    const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
+    return this.apollo.watchQuery({
+      query: gql`
+        {
+          pokemon_v2_pokemonspecies(order_by: {id: asc}) {
+            id
+            name
+            pokemon_v2_pokemons {
+              id
+              name
+              pokemon_v2_pokemontypes {
+                pokemon_v2_type {
+                  id
+                  name
+                  pokemon_v2_typenames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                    name
+                  }
+                }
+              }
+            }
+            pokemon_v2_pokemonspeciesnames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+              name
+            }
+          }
+        }
+      `
+    }).valueChanges.pipe(
+      map((res: any) => {
+        const list: PokemonListItem[] = [];
 
-    return this.http.get<Pokemon>(url).pipe(
-      tap(res => Storage.addPokemon(res))
-    );
-  }
+        for(let pokemon of res.data.pokemon_v2_pokemonspecies) {
+          let types: PokemonType[] = [];
+          let item: PokemonListItem = {} as PokemonListItem;
+          item.id = pokemon.id;
+          item.name = pokemon.name;
+          item.localeName = pokemon.pokemon_v2_pokemonspeciesnames[0].name;
 
-  getSpeciesInfo(url: string): Observable<PokemonSpecies> {
-    return this.http.get<PokemonSpecies>(url).pipe(
-      tap(res => {
+          for(let type of pokemon.pokemon_v2_pokemons) {
+            if(type.id === pokemon.id) {
+              if(type.pokemon_v2_pokemontypes[0]) {
+                types.push({
+                  id: type.pokemon_v2_pokemontypes[0].pokemon_v2_type.id,
+                  name: type.pokemon_v2_pokemontypes[0].pokemon_v2_type.name,
+                  localeName: type.pokemon_v2_pokemontypes[0].pokemon_v2_type.pokemon_v2_typenames[0].name
+                });
+              }
 
+              if(type.pokemon_v2_pokemontypes[1]) {
+                types.push({
+                  id: type.pokemon_v2_pokemontypes[1].pokemon_v2_type.id,
+                  name: type.pokemon_v2_pokemontypes[1].pokemon_v2_type.name,
+                  localeName: type.pokemon_v2_pokemontypes[1].pokemon_v2_type.pokemon_v2_typenames[0].name
+                });
+              }
+            }
+          }
+
+          item.types = types;
+          list.push(item);
+        }
+
+        this.storage.setExpireTime(moment().add(1, 'week').toDate());
+        this.storage.setPokemonList(list);
+
+        return list;
       })
     );
   }
 
-  getEvolutionChain(url: string): Observable<EvolutionChain> {
-    return this.http.get<EvolutionChain>(url).pipe(
-      tap(res => {
+  getPokemon(id: number): Observable<Pokemon> {
+    const p = this.storage.getPokemon(id);
 
+    if(p) {
+      return new Observable(o => {
+        o.next(p);
+        o.complete();
+      });
+    }
+
+    return this.apollo.watchQuery({
+      query: gql`
+        {
+          pokemon_v2_pokemon(where: {id: {_eq: ${id}}}) {
+            id
+            name
+            height
+            weight
+            pokemon_v2_pokemonspecy {
+              evolution_chain_id
+              pokemon_v2_pokemonspeciesnames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                name
+              }
+            }
+            pokemon_v2_pokemontypes {
+              pokemon_v2_type {
+                id
+                name
+                pokemon_v2_typenames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                  name
+                }
+              }
+            }
+          }
+        }
+      `
+    }).valueChanges.pipe(
+      map((res: any) => {
+        const p = res.data.pokemon_v2_pokemon[0];
+        const pokemon = {} as Pokemon;
+
+        pokemon.id = p.id;
+        pokemon.name = p.name;
+        pokemon.localeName = p.pokemon_v2_pokemonspecy.pokemon_v2_pokemonspeciesnames[0].name;
+        pokemon.height = p.height;
+        pokemon.weight = p.weight;
+        pokemon.evolutionChainId = p.pokemon_v2_pokemonspecy.evolution_chain_id;
+        pokemon.spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`;
+        pokemon.types = [{
+          id: p.pokemon_v2_pokemontypes[0].pokemon_v2_type.id,
+          name: p.pokemon_v2_pokemontypes[0].pokemon_v2_type.name,
+          localeName: p.pokemon_v2_pokemontypes[0].pokemon_v2_type.pokemon_v2_typenames[0].name 
+        }];
+
+        if(p.pokemon_v2_pokemontypes[1]) {
+          pokemon.types.push({
+            id: p.pokemon_v2_pokemontypes[1].pokemon_v2_type.id,
+            name: p.pokemon_v2_pokemontypes[1].pokemon_v2_type.name,
+            localeName: p.pokemon_v2_pokemontypes[1].pokemon_v2_type.pokemon_v2_typenames[0].name
+          });
+        }
+
+        this.storage.addPokemon(pokemon);
+
+        return pokemon;
+      })
+    );
+  }
+
+  getEvolutions(chainId: number): Observable<any> {
+    return this.apollo.watchQuery({
+      query: gql`
+        {
+          pokemon_v2_evolutionchain(where: {id: {_eq: ${chainId}}}) {
+            pokemon_v2_pokemonspecies(order_by: {id: asc}) {
+              id
+              name
+              pokemon_v2_pokemonspeciesnames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                name
+              }
+              pokemon_v2_pokemonevolutions {
+                evolution_item_id
+                evolution_trigger_id
+                evolved_species_id
+                gender_id
+                held_item_id
+                known_move_id
+                known_move_type_id
+                location_id
+                min_affection
+                min_beauty
+                min_happiness
+                min_level
+                needs_overworld_rain
+                party_species_id
+                party_type_id
+                relative_physical_stats
+                time_of_day
+                trade_species_id
+                turn_upside_down
+                pokemon_v2_evolutiontrigger {
+                  pokemon_v2_evolutiontriggernames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                    name
+                  }
+                }
+                pokemonV2ItemByHeldItemId {
+                  pokemon_v2_itemnames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                    name
+                  }
+                }
+                pokemon_v2_item {
+                  pokemon_v2_itemnames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                    name
+                  }
+                }
+                pokemon_v2_type {
+                  pokemon_v2_typenames(where: {language_id: {_eq: 9}}) {
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      `
+    }).valueChanges.pipe(
+      map((res: any) => {
+        const links = res.data.pokemon_v2_evolutionchain[0].pokemon_v2_pokemonspecies;
+        const evolutions: PokemonEvolution[] = [];
+        
+        for(let link of links) {
+          const evolution = {} as PokemonEvolution;
+          evolution.pokemonId = link.id;
+          evolution.pokemonName = link.pokemon_v2_pokemonspeciesnames[0].name;
+          evolution.pokemonSprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${link.id}.png`;
+
+          if(link.pokemon_v2_pokemonevolutions.length === 0) {
+            evolutions.push(evolution);
+
+            continue;
+          }
+
+          for(let evo of link.pokemon_v2_pokemonevolutions) {
+            evolution.evolutionItemId = evo.evolution_item_id;
+            evolution.evolutionItemName = evo.pokemon_v2_item?.pokemon_v2_itemnames[0].name;
+            evolution.evolutionTriggerId = evo.evolution_trigger_id;
+            evolution.evolutionTriggerName = evo.pokemon_v2_evolutiontrigger.pokemon_v2_evolutiontriggernames[0].name;
+            evolution.evolvedSpeciesId = evo.evolved_species_id;
+            evolution.genderId = evo.gender_id;
+            evolution.heldItemId = evo.held_item_id;
+            evolution.heldItemName = evo.pokemonV2ItemByHeldItemId?.pokemon_v2_itemnames[0].name;
+            evolution.knownMoveId = evo.known_move_id;
+            evolution.knownMoveTypeId = evo.known_move_type_id;
+            evolution.knownMoveTypeName = evo.pokemon_v2_type?.pokemon_v2_typenames[0].name;
+            evolution.locationId = evo.location_id;
+            evolution.minAffection = evo.min_affection;
+            evolution.minBeauty = evo.min_beauty;
+            evolution.minHappiness = evo.min_happiness;
+            evolution.minLevel = evo.min_level;
+            evolution.needsOverworldRain = evo.needs_overworld_rain;
+            evolution.partySpeciesId = evo.party_species_id;
+            evolution.partyTypeId = evo.party_type_id;
+            evolution.relativePhysicalStats = evo.relative_physical_stats;
+            evolution.timeOfDay = evo.time_of_day;
+            evolution.tradeSpeciesId = evo.trade_species_id;
+            evolution.turnUpsideDown = evo.turn_upside_down;
+
+            evolutions.push(evolution);
+          }
+        }
+
+        return _.uniq(evolutions);
       })
     );
   }

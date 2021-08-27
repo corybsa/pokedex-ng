@@ -1,0 +1,9 @@
+<mat-chip-list>
+    <mat-chip
+        *ngFor="let type of types"
+        class="{{ type.name }} type"
+        (click)="doSomethingWithTypes(type.id)"
+    >
+        {{ type.localeName }}
+    </mat-chip>
+</mat-chip-list>
