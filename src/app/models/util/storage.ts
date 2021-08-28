@@ -1,6 +1,9 @@
 import { Injectable } from "@angular/core";
 import * as moment from "moment";
+import * as _ from 'underscore';
+import { PokemonEvolution } from "../pokemon/pokemon-evolution.model";
 import { PokemonListItem } from "../pokemon/pokemon-list-item.model";
+import { PokemonMove } from "../pokemon/pokemon-move.model";
 import { PokemonTypeEfficacies } from "../pokemon/pokemon-type-efficacies.model";
 
 @Injectable({ providedIn: 'root' })
@@ -10,7 +13,9 @@ export class Storage {
         languageId: 'languageId',
         pokemonList: 'pokemonList',
         pokemon: 'pokemon',
-        efficacies: 'efficacies'
+        evolutions: 'evolutions',
+        efficacies: 'efficacies',
+        moves: 'moves'
     };
 
     private languageId: number = 9;
@@ -50,7 +55,7 @@ export class Storage {
 
     getPokemonList(): PokemonListItem[] {
         // to save accesses to localStorage
-        if(this.pokemonList.length > 0) {
+        if(this.pokemonList && this.pokemonList.length > 0) {
             return this.pokemonList;
         }
 
@@ -107,5 +112,49 @@ export class Storage {
 
         types.push(type);
         localStorage.setItem(this.Keys.efficacies, JSON.stringify(types));
+    }
+
+    getEvolutions(chainId: number): PokemonEvolution[] | null {
+        let evolutions: any[] = JSON.parse(localStorage.getItem(this.Keys.evolutions) as string);
+
+        if(!evolutions) {
+            return null;
+        }
+
+        return _.findWhere(evolutions, { chainId }).evolutions;
+    }
+
+    addEvolutions(chainId: number, evolutions: PokemonEvolution[]) {
+        let list = JSON.parse(localStorage.getItem(this.Keys.evolutions) as string);
+
+        if(!list) {
+            list = [];
+        }
+
+        list.push({ chainId, evolutions });
+
+        localStorage.setItem(this.Keys.evolutions, JSON.stringify(list));
+    }
+
+    getMoves(pokemonId: number): PokemonMove[] | null {
+        let moves: any[] = JSON.parse(localStorage.getItem(this.Keys.moves) as string);
+
+        if(!moves) {
+            return null;
+        }
+
+        return _.findWhere(moves, { pokemonId }).moves;
+    }
+
+    addMoves(pokemonId: number, moves: PokemonMove[]) {
+        let list = JSON.parse(localStorage.getItem(this.Keys.moves) as string);
+
+        if(!list) {
+            list = [];
+        }
+
+        list.push({ pokemonId, moves });
+
+        localStorage.setItem(this.Keys.moves, JSON.stringify(list));
     }
 }

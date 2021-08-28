@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="evolutions.length > 1">
     <p><strong>Evolutions:</strong></p>
     <div class="container container-{{ evolutions.length }}-stages">
         <ng-container *ngFor="let evo of evolutions">

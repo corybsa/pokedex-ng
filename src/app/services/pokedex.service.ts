@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { Storage } from '../models/util/storage';
 import { Apollo, gql } from 'apollo-angular';
@@ -93,6 +93,19 @@ export class PokedexService {
         this.storage.setPokemonList(list);
 
         return list;
+      }),
+      catchError(() => {
+        const list = this.storage.getPokemonList();
+        let res: PokemonListItem[] = [];
+
+        if(list) {
+          res = list;
+        }
+
+        return new Observable<PokemonListItem[]>(o => {
+          o.next(res);
+          o.complete();
+        });
       })
     );
   }
@@ -162,11 +175,33 @@ export class PokedexService {
         this.storage.addPokemon(pokemon);
 
         return pokemon;
+      }),
+      catchError(() => {
+        const list = this.storage.getPokemon(id);
+        let res: Pokemon = null as unknown as Pokemon; // wtf
+
+        if(list) {
+          res = list;
+        }
+
+        return new Observable<Pokemon>(o => {
+          o.next(res);
+          o.complete();
+        });
       })
     );
   }
 
-  getEvolutions(chainId: number): Observable<any> {
+  getEvolutions(chainId: number): Observable<PokemonEvolution[]> {
+    const list = this.storage.getEvolutions(chainId);
+
+    if(list) {
+      return new Observable(o => {
+        o.next(list);
+        o.complete();
+      });
+    }
+
     return this.apollo.watchQuery({
       query: gql`
         {
@@ -213,7 +248,7 @@ export class PokedexService {
                   }
                 }
                 pokemon_v2_type {
-                  pokemon_v2_typenames(where: {language_id: {_eq: 9}}) {
+                  pokemon_v2_typenames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
                     name
                   }
                 }
@@ -268,7 +303,23 @@ export class PokedexService {
           }
         }
 
-        return _.uniq(evolutions);
+        const evos = _.uniq(evolutions)
+        this.storage.addEvolutions(chainId, evos);
+
+        return evos;
+      }),
+      catchError(() => {
+        const list = this.storage.getEvolutions(chainId);
+        let res: PokemonEvolution[] = [];
+
+        if(list) {
+          res = list;
+        }
+
+        return new Observable<PokemonEvolution[]>(o => {
+          o.next(res);
+          o.complete();
+        });
       })
     );
   }

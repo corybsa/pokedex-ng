@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { PokemonMove } from '../models/pokemon/pokemon-move.model';
 import { Storage } from '../models/util/storage';
 
@@ -15,7 +15,16 @@ export class PokemonMovesService {
     private storage: Storage
   ) { }
 
-  getMovesLearnedByLevelUp(pokemonId: number): Observable<any> {
+  getMovesLearnedByLevelUp(pokemonId: number): Observable<PokemonMove[]> {
+    const list = this.storage.getMoves(pokemonId);
+
+    if(list) {
+      return new Observable(o => {
+        o.next(list);
+        o.complete();
+      });
+    }
+
     // TODO: store version in localStorage and put it in the query string
     const levelUp = 1;
 
@@ -75,7 +84,22 @@ export class PokemonMovesService {
           });
         }
 
+        this.storage.addMoves(pokemonId, pokemonMoves);
+
         return pokemonMoves;
+      }),
+      catchError(() => {
+        const list = this.storage.getMoves(pokemonId);
+        let res: PokemonMove[] = [];
+
+        if(list) {
+          res = list;
+        }
+
+        return new Observable<PokemonMove[]>(o => {
+          o.next(res);
+          o.complete();
+        });
       })
     );
   }
