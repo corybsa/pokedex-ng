@@ -11,6 +11,7 @@ import { PokdexModule } from './pokedex/pokedex.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { GraphQLModule } from './graphql.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { GraphQLModule } from './graphql.module';
     TypedexModule,
     MatSidenavModule,
     MatIconModule,
+    MatSnackBarModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the app is stable

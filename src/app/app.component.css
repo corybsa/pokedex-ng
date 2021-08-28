@@ -39,12 +39,14 @@ mat-drawer {
     z-index: 10;
 }
 
-.top-bar mat-icon {
+.top-bar mat-icon,
+.nav-header mat-icon {
     position: static;
     cursor: pointer;
     float: left;
     margin-top: 13px;
     margin-left: 13px;
+    color: white;
 }
 
 .top-bar span {

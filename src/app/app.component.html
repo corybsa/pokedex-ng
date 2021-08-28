@@ -1,6 +1,8 @@
 <mat-drawer-container>
     <mat-drawer #drawer mode="over">
-        <div class="nav-header"></div>
+        <div class="nav-header">
+            <mat-icon (click)="drawer.toggle()">close</mat-icon>
+        </div>
         <a routerLink="/pokedex" class="nav-item" (click)="drawer.close()">
             <mat-icon>search</mat-icon>
             <span>Pokedex</span>
@@ -9,6 +11,11 @@
             <mat-icon>science</mat-icon>
             <span>Types</span>
         </a>
+        <div class="nav-separator"></div>
+        <div class="nav-item" (click)="checkForUpdates()">
+            <mat-icon>update</mat-icon>
+            <span>Check for updates</span>
+        </div>
         <div class="nav-separator"></div>
         <div class="nav-item" (click)="clearData()">
             <mat-icon>save</mat-icon>
