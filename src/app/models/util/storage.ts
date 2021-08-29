@@ -96,11 +96,7 @@ export class Storage {
 
         const type = types.find(item => item.pokemonId === pokemonId);
 
-        if(!type) {
-            return null;
-        }
-
-        return type;
+        return type || null;
     }
 
     addEfficacies(type: PokemonTypeEfficacies) {
@@ -121,7 +117,9 @@ export class Storage {
             return null;
         }
 
-        return _.findWhere(evolutions, { chainId }).evolutions;
+        const list = _.findWhere(evolutions, { chainId });
+
+        return list ? list.evolutions : null;
     }
 
     addEvolutions(chainId: number, evolutions: PokemonEvolution[]) {
@@ -143,7 +141,9 @@ export class Storage {
             return null;
         }
 
-        return _.findWhere(moves, { pokemonId }).moves;
+        const list = _.findWhere(moves, { pokemonId });
+
+        return list ? list.moves : null;
     }
 
     addMoves(pokemonId: number, moves: PokemonMove[]) {
