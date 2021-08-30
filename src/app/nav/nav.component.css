@@ -1,0 +1,58 @@
+mat-drawer-container {
+    min-height: 100%;
+}
+
+mat-drawer {
+    min-width: 80%;
+}
+
+.top-bar {
+    height: 50px;
+    background-color: #f44336;
+    color: white;
+    position: static;
+    width: 100%;
+    z-index: 10;
+}
+
+.top-bar mat-icon,
+.nav-header mat-icon {
+    position: static;
+    cursor: pointer;
+    float: left;
+    margin-top: 13px;
+    margin-left: 13px;
+    color: white;
+}
+
+.top-bar span {
+    position: relative;
+    top: 15px;
+    left: calc(50% - 65px);
+    display: inline-block;
+    text-align: center;
+}
+
+.nav-header {
+    height: 50px;
+    background-color: #f44336;
+}
+
+::ng-deep .nav-item {
+    display: block;
+    margin-top: 10px;
+    padding-left: 10px;
+    color: black;
+    text-decoration: none;
+}
+
+:host::ng-deep .nav-item span {
+    position: relative;
+    top: -6px;
+}
+
+:host::ng-deep .nav-separator {
+    height: 1px;
+    background-color: hsl(0, 0%, 83%);
+    margin: 10px 5px 0px;
+}

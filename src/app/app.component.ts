@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
-import { Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
@@ -10,12 +9,9 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'pokedex';
-
   @ViewChild('drawer') drawer!: MatDrawer;
 
   constructor(
-    private router: Router,
     private updates: SwUpdate,
     private snackBar: MatSnackBar
   ) {}
@@ -29,10 +25,6 @@ export class AppComponent implements OnInit {
         });
       });
     });
-  }
-
-  goToPokedex() {
-    this.router.navigate(['/pokedex']);
   }
 
   clearData() {

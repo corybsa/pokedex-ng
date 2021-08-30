@@ -17,6 +17,10 @@
         </mat-card-header>
     </mat-card>
 
+    <mat-card *ngIf="page.length === 0">
+        <mat-card-content>No data to display.</mat-card-content>
+    </mat-card>
+
     <mat-paginator
         *ngIf="!isSearching"
         [length]="pokemon.length"

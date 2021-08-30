@@ -1,0 +1,13 @@
+<a routerLink="/pokedex" class="nav-item">
+    <mat-icon>search</mat-icon>
+    <span>Pokedex</span>
+</a>
+<a routerLink="/typedex" class="nav-item">
+    <mat-icon>science</mat-icon>
+    <span>Types</span>
+</a>
+<div class="nav-separator"></div>
+<a [routerLink]="[{ outlets: { 'nav': ['settings'] } }]" class="nav-item">
+    <mat-icon>settings</mat-icon>
+    <span>Settings</span>
+</a>

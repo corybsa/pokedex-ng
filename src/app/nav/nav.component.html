@@ -1,0 +1,16 @@
+<mat-drawer-container>
+    <mat-drawer #drawer>
+        <div class="nav-header">
+            <mat-icon (click)="closeDrawer()">close</mat-icon>
+        </div>
+        <router-outlet name="nav"></router-outlet>
+    </mat-drawer>
+    <mat-drawer-content>
+        <div class="top-bar">
+            <mat-icon (click)="drawer.toggle()">menu</mat-icon>
+            <span>Pokedex</span>
+        </div>
+
+        <ng-content></ng-content>
+    </mat-drawer-content>
+</mat-drawer-container>

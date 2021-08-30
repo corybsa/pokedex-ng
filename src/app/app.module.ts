@@ -12,15 +12,20 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { GraphQLModule } from './graphql.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NavModule } from './nav/nav.module';
+import { NavComponent } from './nav/nav.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NavComponent
   ],
   imports: [
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    GraphQLModule,
+    NavModule,
     PokdexModule,
     TypedexModule,
     MatSidenavModule,
@@ -31,8 +36,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
       // Register the ServiceWorker as soon as the app is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
-    }),
-    GraphQLModule
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
