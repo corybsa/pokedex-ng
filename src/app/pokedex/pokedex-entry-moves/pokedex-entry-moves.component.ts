@@ -22,9 +22,7 @@ export class PokedexEntryMovesComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     if(this.pokemon) {
-      this.service.getMovesLearnedByLevelUp(this.pokemon.id).subscribe(res => {
-        this.moves = res;
-      })
+      this.service.getMovesLearnedByLevelUp(this.pokemon.id).subscribe(res => this.moves = res);
     }
   }
 }

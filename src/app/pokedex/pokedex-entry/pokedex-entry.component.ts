@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ApplicationRef, Component, ComponentFactoryResolver, ComponentRef, ContentChild, Injector, NgZone, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PokedexService } from '../../services/pokedex.service';
 import * as _ from 'underscore';
 import { Pokemon } from 'src/app/models/pokemon/pokemon.model';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-pokedex-entry',
@@ -11,6 +12,11 @@ import { Pokemon } from 'src/app/models/pokemon/pokemon.model';
 })
 export class PokedexEntryComponent implements OnInit {
   pokemon!: Pokemon;
+
+  @ViewChild('moves', { read: ViewContainerRef })
+  movesRef!: ViewContainerRef;
+
+  movesComponent!: ComponentRef<any>;
 
   constructor(
     private service: PokedexService,
@@ -41,9 +47,5 @@ export class PokedexEntryComponent implements OnInit {
 
   convertToPounds(weight: number) {
     return (weight * 0.2205).toFixed(1);
-  }
-
-  doSomethingWithTypes(id: number) {
-    console.log(id);
   }
 }

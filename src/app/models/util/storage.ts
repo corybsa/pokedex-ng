@@ -15,7 +15,8 @@ export class Storage {
         pokemon: 'pokemon',
         evolutions: 'evolutions',
         efficacies: 'efficacies',
-        moves: 'moves'
+        moves: 'moves',
+        entryPage: 'entryPage'
     };
 
     private languageId: number = 9;
@@ -156,5 +157,15 @@ export class Storage {
         list.push({ pokemonId, moves });
 
         localStorage.setItem(this.Keys.moves, JSON.stringify(list));
+    }
+
+    getEntryPage(): number {
+        const page = localStorage.getItem(this.Keys.entryPage);
+
+        return page ? +page : 0;
+    }
+
+    setEntryPage(page: number) {
+        localStorage.setItem(this.Keys.entryPage, page.toString());
     }
 }
