@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "gh-build": "ng build --configuration production --base-href /dist/pokedex"
+    "gh-build": "ng build -c production --base-href /dist/pokedex --deploy-url https://corybsa.github.io/pokedex-ng/dist/pokedex/"
   },
   "private": true,
   "dependencies": {
