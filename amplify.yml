@@ -7,6 +7,8 @@ applications:
           - npm ci
       build:
         commands:
+          - npm cache clean --force
+          - npm install
           - npm run build
     artifacts:
       baseDirectory: dist/pokedex
