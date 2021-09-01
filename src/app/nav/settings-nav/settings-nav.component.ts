@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
+import { Apollo } from 'apollo-angular';
 
 @Component({
   selector: 'app-settings-nav',
@@ -11,13 +12,16 @@ export class SettingsNavComponent implements OnInit {
 
   constructor(
     private updates: SwUpdate,
-    private router: Router
+    private router: Router,
+    private apollo: Apollo
   ) { }
 
   ngOnInit(): void {
   }
 
   clearData() {
+    this.apollo.client.clearStore();
+    this.apollo.client.resetStore();
     localStorage.clear();
     location.replace('/');
   }

@@ -6,8 +6,8 @@ import {HttpLink} from 'apollo-angular/http';
 const uri = 'https://beta.pokeapi.co/graphql/v1beta';
 export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
   return {
-    link: httpLink.create({uri}),
-    cache: new InMemoryCache(),
+    link: httpLink.create({ uri }),
+    cache: new InMemoryCache()
   };
 }
 
