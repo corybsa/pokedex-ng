@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { PokemonMove } from '../models/pokemon/pokemon-move.model';
 import { Storage } from '../models/util/storage';
 
@@ -33,7 +34,7 @@ export class PokemonMovesService {
 
     return this.apollo.watchQuery({
       query: gql`
-        query getMovesLearnedByLevelUp($pokemonId: Int!, $gameVersion: Int!, $method: Int!, $languageId: Int!) {
+        query getMovesLearnedByLevelUp${environment.name}($pokemonId: Int!, $gameVersion: Int!, $method: Int!, $languageId: Int!) {
           pokemon_v2_pokemonmove(where: {pokemon_id: {_eq: $pokemonId}, version_group_id: {_eq: $gameVersion}, move_learn_method_id: {_eq: $method}}, order_by: {level: asc, version_group_id: desc}) {
             level
             pokemon_v2_move {

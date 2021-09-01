@@ -9,6 +9,7 @@ import { PokemonType } from '../models/pokemon/pokemon-type.model';
 import { Pokemon } from '../models/pokemon/pokemon.model';
 import { PokemonEvolution } from '../models/pokemon/pokemon-evolution.model';
 import * as _ from 'underscore';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,7 @@ export class PokedexService {
 
     return this.apollo.watchQuery({
       query: gql`
-        query getPokemonList($languageId: Int!) {
+        query getPokemonList${environment.name}($languageId: Int!) {
           pokemon_v2_pokemonspecies(order_by: {id: asc}) {
             id
             name
@@ -125,7 +126,7 @@ export class PokedexService {
 
     return this.apollo.watchQuery({
       query: gql`
-        query getPokemon($pokemonId: Int!, $languageId: Int!) {
+        query getPokemon${environment.name}($pokemonId: Int!, $languageId: Int!) {
           pokemon_v2_pokemon(where: {id: {_eq: $pokemonId}}) {
             id
             name
@@ -211,7 +212,7 @@ export class PokedexService {
 
     return this.apollo.watchQuery({
       query: gql`
-        query getEvolutions($chainId: Int!, $languageId: Int!) {
+        query getEvolutions${environment.name}($chainId: Int!, $languageId: Int!) {
           pokemon_v2_evolutionchain(where: {id: {_eq: $chainId}}) {
             pokemon_v2_pokemonspecies(order_by: {id: asc}) {
               id

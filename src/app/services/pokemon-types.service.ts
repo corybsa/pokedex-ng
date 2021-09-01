@@ -7,6 +7,7 @@ import { Storage } from '../models/util/storage';
 import * as _ from 'underscore';
 import { PokemonType } from '../models/pokemon/pokemon-type.model';
 import { PokemonTypes } from '../models/util/pokemon-types.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,7 @@ export class PokemonTypesService {
 
     return this.apollo.watchQuery({
       query: gql`
-        query getPokemonTypes($pokemonId: Int!, $languageId: Int!) {
+        query getPokemonTypes${environment.name}($pokemonId: Int!, $languageId: Int!) {
           pokemon_v2_pokemontype(where: {pokemon_v2_pokemon: {id: {_eq: $pokemonId}}}) {
             pokemon_v2_type {
               pokemonV2TypeefficaciesByTargetTypeId {
