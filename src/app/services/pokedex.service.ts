@@ -31,7 +31,7 @@ export class PokedexService {
 
     return this.apollo.watchQuery({
       query: gql`
-        {
+        query getPokemonList($languageId: Int!) {
           pokemon_v2_pokemonspecies(order_by: {id: asc}) {
             id
             name
@@ -42,18 +42,21 @@ export class PokedexService {
                 pokemon_v2_type {
                   id
                   name
-                  pokemon_v2_typenames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                  pokemon_v2_typenames(where: {language_id: {_eq: $languageId}}) {
                     name
                   }
                 }
               }
             }
-            pokemon_v2_pokemonspeciesnames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+            pokemon_v2_pokemonspeciesnames(where: {language_id: {_eq: $languageId}}) {
               name
             }
           }
         }
-      `
+      `,
+      variables: {
+        languageId: this.storage.getLanguageId()
+      }
     }).valueChanges.pipe(
       map((res: any) => {
         const list: PokemonListItem[] = [];
@@ -122,15 +125,15 @@ export class PokedexService {
 
     return this.apollo.watchQuery({
       query: gql`
-        {
-          pokemon_v2_pokemon(where: {id: {_eq: ${id}}}) {
+        query getPokemon($pokemonId: Int!, $languageId: Int!) {
+          pokemon_v2_pokemon(where: {id: {_eq: $pokemonId}}) {
             id
             name
             height
             weight
             pokemon_v2_pokemonspecy {
               evolution_chain_id
-              pokemon_v2_pokemonspeciesnames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+              pokemon_v2_pokemonspeciesnames(where: {language_id: {_eq: $languageId}}) {
                 name
               }
             }
@@ -138,14 +141,18 @@ export class PokedexService {
               pokemon_v2_type {
                 id
                 name
-                pokemon_v2_typenames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                pokemon_v2_typenames(where: {language_id: {_eq: $languageId}}) {
                   name
                 }
               }
             }
           }
-        }
-      `
+        }      
+      `,
+      variables: {
+        pokemonId: id,
+        languageId: this.storage.getLanguageId()
+      }
     }).valueChanges.pipe(
       map((res: any) => {
         const p = res.data.pokemon_v2_pokemon[0];
@@ -204,12 +211,12 @@ export class PokedexService {
 
     return this.apollo.watchQuery({
       query: gql`
-        {
-          pokemon_v2_evolutionchain(where: {id: {_eq: ${chainId}}}) {
+        query getEvolutions($chainId: Int!, $languageId: Int!) {
+          pokemon_v2_evolutionchain(where: {id: {_eq: $chainId}}) {
             pokemon_v2_pokemonspecies(order_by: {id: asc}) {
               id
               name
-              pokemon_v2_pokemonspeciesnames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+              pokemon_v2_pokemonspeciesnames(where: {language_id: {_eq: $languageId}}) {
                 name
               }
               pokemon_v2_pokemonevolutions {
@@ -233,22 +240,22 @@ export class PokedexService {
                 trade_species_id
                 turn_upside_down
                 pokemon_v2_evolutiontrigger {
-                  pokemon_v2_evolutiontriggernames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                  pokemon_v2_evolutiontriggernames(where: {language_id: {_eq: $languageId}}) {
                     name
                   }
                 }
                 pokemonV2ItemByHeldItemId {
-                  pokemon_v2_itemnames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                  pokemon_v2_itemnames(where: {language_id: {_eq: $languageId}}) {
                     name
                   }
                 }
                 pokemon_v2_item {
-                  pokemon_v2_itemnames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                  pokemon_v2_itemnames(where: {language_id: {_eq: $languageId}}) {
                     name
                   }
                 }
                 pokemon_v2_type {
-                  pokemon_v2_typenames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                  pokemon_v2_typenames(where: {language_id: {_eq: $languageId}}) {
                     name
                   }
                 }
@@ -256,7 +263,11 @@ export class PokedexService {
             }
           }
         }
-      `
+      `,
+      variables: {
+        chainId: chainId,
+        languageId: this.storage.getLanguageId()
+      }
     }).valueChanges.pipe(
       map((res: any) => {
         const links = res.data.pokemon_v2_evolutionchain[0].pokemon_v2_pokemonspecies;

@@ -25,43 +25,52 @@ export class PokemonMovesService {
       });
     }
 
-    // TODO: store version in localStorage and put it in the query string
-    const levelUp = 1;
+    // TODO: store method in localStorage and pass it as variable
+    const method = 1; // level up
+
+    // TODO: store version in localStorage and pass it as variable
+    const versionGroupId = 18; // sun and moon
 
     return this.apollo.watchQuery({
       query: gql`
-        {
-          pokemon_v2_pokemonmove(where: {pokemon_id: {_eq: ${pokemonId}}, version_group_id: {_eq: 18}, move_learn_method_id: {_eq: ${levelUp}}}, order_by: {level: asc, version_group_id: desc}) {
+        query getMovesLearnedByLevelUp($pokemonId: Int!, $gameVersion: Int!, $method: Int!, $languageId: Int!) {
+          pokemon_v2_pokemonmove(where: {pokemon_id: {_eq: $pokemonId}, version_group_id: {_eq: $gameVersion}, move_learn_method_id: {_eq: $method}}, order_by: {level: asc, version_group_id: desc}) {
             level
             pokemon_v2_move {
               power
               pp
               accuracy
               move_effect_chance
-              pokemon_v2_movenames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+              pokemon_v2_movenames(where: {language_id: {_eq: $languageId}}) {
                 name
               }
               pokemon_v2_movedamageclass {
-                pokemon_v2_movedamageclassnames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                pokemon_v2_movedamageclassnames(where: {language_id: {_eq: $languageId}}) {
                   name
                 }
               }
               pokemon_v2_moveeffect {
-                pokemon_v2_moveeffecteffecttexts(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                pokemon_v2_moveeffecteffecttexts(where: {language_id: {_eq: $languageId}}) {
                   short_effect
                 }
               }
               pokemon_v2_type {
                 id
                 name
-                pokemon_v2_typenames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                pokemon_v2_typenames(where: {language_id: {_eq: $languageId}}) {
                   name
                 }
               }
             }
           }
         }
-      `
+      `,
+      variables: {
+        pokemonId: pokemonId,
+        gameVersion: versionGroupId,
+        method: method,
+        languageId: this.storage.getLanguageId()
+      }
     }).valueChanges.pipe(
       map((res: any) => {
         const moves = res.data.pokemon_v2_pokemonmove;

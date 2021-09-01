@@ -30,15 +30,15 @@ export class PokemonTypesService {
 
     return this.apollo.watchQuery({
       query: gql`
-        {
-          pokemon_v2_pokemontype(where: {pokemon_v2_pokemon: {id: {_eq: ${pokemonId}}}}) {
+        query getPokemonTypes($pokemonId: Int!, $languageId: Int!) {
+          pokemon_v2_pokemontype(where: {pokemon_v2_pokemon: {id: {_eq: $pokemonId}}}) {
             pokemon_v2_type {
               pokemonV2TypeefficaciesByTargetTypeId {
                 damage_factor
                 pokemon_v2_type {
                   id
                   name
-                  pokemon_v2_typenames(where: {language_id: {_eq: ${this.storage.getLanguageId()}}}) {
+                  pokemon_v2_typenames(where: {language_id: {_eq: $languageId}}) {
                     name
                   }
                 }
@@ -46,7 +46,11 @@ export class PokemonTypesService {
             }
           }
         }
-      `
+      `,
+      variables: {
+        pokemonId: pokemonId,
+        languageId: this.storage.getLanguageId()
+      }
     }).valueChanges.pipe(
       map((res: any) => {
         const types = res.data.pokemon_v2_pokemontype;
