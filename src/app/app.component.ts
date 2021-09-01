@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { SwUpdate } from '@angular/service-worker';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import { Apollo } from 'apollo-angular';
 
 @Component({
   selector: 'app-root',
@@ -14,8 +13,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     private updates: SwUpdate,
-    private snackBar: MatSnackBar,
-    private apollo: Apollo
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
