@@ -80,7 +80,7 @@ export class PokemonMovesService {
         for(let move of moves) {
           pokemonMoves.push({
             localeName: move.pokemon_v2_move.pokemon_v2_movenames[0].name,
-            localeEffect: move.pokemon_v2_move.pokemon_v2_moveeffect.pokemon_v2_moveeffecteffecttexts[0].short_effect.replace('$effect_chance', move.pokemon_v2_move.move_effect_chance),
+            localeEffect: move.pokemon_v2_move.pokemon_v2_moveeffect.pokemon_v2_moveeffecteffecttexts[0]?.short_effect.replace('$effect_chance', move.pokemon_v2_move.move_effect_chance),
             localeClass: move.pokemon_v2_move.pokemon_v2_movedamageclass.pokemon_v2_movedamageclassnames[0].name,
             levelLearned: move.level,
             power: move.pokemon_v2_move.power,

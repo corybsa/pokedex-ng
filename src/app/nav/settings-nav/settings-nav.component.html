@@ -3,6 +3,15 @@
     <span>Back</span>
 </div>
 <div class="nav-separator"></div>
+<div class="nav-item">
+    <mat-form-field>
+        <mat-icon>language</mat-icon>
+        <mat-select [value]="storage.getLanguageId()" (valueChange)="changeLanguage($event)">
+            <mat-option *ngFor="let language of languages | async" [value]="language.id">{{language.name}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div class="nav-separator"></div>
 <div class="nav-item" (click)="checkForUpdates()">
     <mat-icon>update</mat-icon>
     <span>Check for updates</span>

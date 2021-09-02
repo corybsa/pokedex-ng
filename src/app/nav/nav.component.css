@@ -38,17 +38,19 @@ mat-drawer {
     background-color: #f44336;
 }
 
-::ng-deep .nav-item {
+:host::ng-deep .nav-item {
     display: block;
     margin-top: 10px;
     padding-left: 10px;
     color: black;
     text-decoration: none;
+    cursor: pointer;
 }
 
 :host::ng-deep .nav-item span {
     position: relative;
     top: -6px;
+    left: 10px;
 }
 
 :host::ng-deep .nav-separator {

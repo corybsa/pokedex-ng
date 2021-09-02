@@ -290,14 +290,14 @@ export class PokedexService {
             evolution.evolutionItemId = evo.evolution_item_id;
             evolution.evolutionItemName = evo.pokemon_v2_item?.pokemon_v2_itemnames[0].name;
             evolution.evolutionTriggerId = evo.evolution_trigger_id;
-            evolution.evolutionTriggerName = evo.pokemon_v2_evolutiontrigger.pokemon_v2_evolutiontriggernames[0].name;
+            evolution.evolutionTriggerName = evo.pokemon_v2_evolutiontrigger.pokemon_v2_evolutiontriggernames[0]?.name;
             evolution.evolvedSpeciesId = evo.evolved_species_id;
             evolution.genderId = evo.gender_id;
             evolution.heldItemId = evo.held_item_id;
-            evolution.heldItemName = evo.pokemonV2ItemByHeldItemId?.pokemon_v2_itemnames[0].name;
+            evolution.heldItemName = evo.pokemonV2ItemByHeldItemId?.pokemon_v2_itemnames[0]?.name;
             evolution.knownMoveId = evo.known_move_id;
             evolution.knownMoveTypeId = evo.known_move_type_id;
-            evolution.knownMoveTypeName = evo.pokemon_v2_type?.pokemon_v2_typenames[0].name;
+            evolution.knownMoveTypeName = evo.pokemon_v2_type?.pokemon_v2_typenames[0]?.name;
             evolution.locationId = evo.location_id;
             evolution.minAffection = evo.min_affection;
             evolution.minBeauty = evo.min_beauty;

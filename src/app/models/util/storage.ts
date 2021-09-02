@@ -19,7 +19,7 @@ export class Storage {
         entryPage: 'entryPage'
     };
 
-    private languageId: number = 9;
+    private languageId: number;
     private pokemonList: PokemonListItem[] = [];
 
     constructor() {
@@ -29,6 +29,8 @@ export class Storage {
         if(moment().isAfter(expireDate)) {
             this.deletePokemonList();
         }
+
+        this.languageId = this.getLanguageId();
     }
 
     getExpireTime(): moment.Moment {
@@ -43,7 +45,12 @@ export class Storage {
         if(!this.languageId) {
             const item = localStorage.getItem(this.Keys.languageId);
             // if item is null default to english
-            this.languageId = item ? +item : 9;
+            if(item) {
+                this.languageId = +item;
+            } else {
+                this.languageId = 9;
+                localStorage.setItem(this.Keys.languageId, '9');
+            }
         }
 
         return this.languageId;
@@ -51,6 +58,12 @@ export class Storage {
 
     setLanguageId(num: number) {
         this.languageId = num;
+        
+        for(let prop in this.Keys) {
+            // @ts-expect-error
+            localStorage.removeItem(this.Keys[prop]);
+        }
+
         localStorage.setItem(this.Keys.languageId, num.toString());
     }
 

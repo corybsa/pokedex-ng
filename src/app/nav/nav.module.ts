@@ -6,6 +6,7 @@ import { MainNavComponent } from './main-nav/main-nav.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { SettingsNavComponent } from './settings-nav/settings-nav.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { SettingsNavComponent } from './settings-nav/settings-nav.component';
     CommonModule,
     NavRoutingModule,
     MatSidenavModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule
   ]
 })
 export class NavModule { }
