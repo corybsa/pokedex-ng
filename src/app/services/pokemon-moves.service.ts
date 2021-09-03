@@ -5,6 +5,7 @@ import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { PokemonMove } from '../models/pokemon/pokemon-move.model';
 import { Storage } from '../models/util/storage';
+import * as _ from 'underscore';
 
 @Injectable({
   providedIn: 'root'
@@ -30,12 +31,12 @@ export class PokemonMovesService {
     const method = 1; // level up
 
     // TODO: store version in localStorage and pass it as variable
-    const versionGroupId = 18; // sun and moon
+    const generationId = 7; // gen 7
 
     return this.apollo.watchQuery({
       query: gql`
-        query getMovesLearnedByLevelUp${environment.name}($pokemonId: Int!, $gameVersion: Int!, $method: Int!, $languageId: Int!) {
-          pokemon_v2_pokemonmove(where: {pokemon_id: {_eq: $pokemonId}, version_group_id: {_eq: $gameVersion}, move_learn_method_id: {_eq: $method}}, order_by: {level: asc, version_group_id: desc}) {
+        query getMovesLearnedByLevelUp${environment.name}($pokemonId: Int!, $generationId: Int!, $method: Int!, $languageId: Int!) {
+          pokemon_v2_pokemonmove(where: {pokemon_id: {_eq: $pokemonId}, move_learn_method_id: {_eq: $method}, pokemon_v2_versiongroup: {generation_id: {_eq: $generationId}}}, distinct_on: move_id) {
             level
             pokemon_v2_move {
               power
@@ -68,14 +69,14 @@ export class PokemonMovesService {
       `,
       variables: {
         pokemonId: pokemonId,
-        gameVersion: versionGroupId,
+        generationId: generationId,
         method: method,
         languageId: this.storage.getLanguageId()
       }
     }).valueChanges.pipe(
       map((res: any) => {
         const moves = res.data.pokemon_v2_pokemonmove;
-        const pokemonMoves: PokemonMove[] = [];
+        let pokemonMoves: PokemonMove[] = [];
 
         for(let move of moves) {
           pokemonMoves.push({
@@ -94,6 +95,7 @@ export class PokemonMovesService {
           });
         }
 
+        pokemonMoves = _.sortBy(pokemonMoves, move => Math.min(move.levelLearned));
         this.storage.addMoves(pokemonId, pokemonMoves);
 
         return pokemonMoves;
