@@ -3,12 +3,7 @@ import { Language } from "../util/language";
 import { Cache } from "./cache";
 
 @Injectable({ providedIn: 'root' })
-export class LanguageCache extends Cache {
-    private LanguageKeys = {
-        languageId: 'languageId',
-        languages: 'languages'
-    };
-    
+export class LanguageCache extends Cache { 
     private languageId: number;
 
     constructor() {
@@ -19,13 +14,13 @@ export class LanguageCache extends Cache {
 
     getLanguageId(): number {
         if(!this.languageId) {
-            const item = localStorage.getItem(this.LanguageKeys.languageId);
+            const item = localStorage.getItem(this.Keys.languageId);
             // if item is null default to english
             if(item) {
                 this.languageId = +item;
             } else {
                 this.languageId = 9; // english
-                localStorage.setItem(this.LanguageKeys.languageId, '9');
+                localStorage.setItem(this.Keys.languageId, '9');
             }
         }
 
@@ -38,11 +33,11 @@ export class LanguageCache extends Cache {
         this.setExpireTime(new Date());
         this.deleteData();
 
-        localStorage.setItem(this.LanguageKeys.languageId, num.toString());
+        localStorage.setItem(this.Keys.languageId, num.toString());
     }
 
     getLanguages(): Language[] | null {
-        const languages = JSON.parse(localStorage.getItem(this.LanguageKeys.languages) as string);
+        const languages = JSON.parse(localStorage.getItem(this.Keys.languages) as string);
 
         if(!languages) {
             return null;
@@ -52,10 +47,6 @@ export class LanguageCache extends Cache {
     }
 
     setLanguages(languages: Language[]) {
-        localStorage.setItem(this.LanguageKeys.languages, JSON.stringify(languages));
-    }
-
-    deleteData() {
-        localStorage.removeItem(this.LanguageKeys.languages);
+        localStorage.setItem(this.Keys.languages, JSON.stringify(languages));
     }
 }

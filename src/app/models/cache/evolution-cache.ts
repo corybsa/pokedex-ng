@@ -5,10 +5,6 @@ import * as _ from 'underscore';
 
 @Injectable({ providedIn: 'root' })
 export class EvolutionCache extends Cache {
-    private EvolutionKeys = {
-        evolutions: 'evolutions'
-    };
-
     constructor() {
         super();
     }
@@ -16,7 +12,7 @@ export class EvolutionCache extends Cache {
     getEvolutions(chainId: number): PokemonEvolution[] | null {
         this.checkExpireTime();
 
-        let evolutions: any[] = JSON.parse(localStorage.getItem(this.EvolutionKeys.evolutions) as string);
+        let evolutions: any[] = JSON.parse(localStorage.getItem(this.Keys.evolutions) as string);
 
         if(!evolutions) {
             return null;
@@ -28,7 +24,7 @@ export class EvolutionCache extends Cache {
     }
 
     addEvolutions(chainId: number, evolutions: PokemonEvolution[]) {
-        let list = JSON.parse(localStorage.getItem(this.EvolutionKeys.evolutions) as string);
+        let list = JSON.parse(localStorage.getItem(this.Keys.evolutions) as string);
 
         if(!list) {
             list = [];
@@ -36,10 +32,6 @@ export class EvolutionCache extends Cache {
 
         list.push({ chainId, evolutions });
 
-        localStorage.setItem(this.EvolutionKeys.evolutions, JSON.stringify(list));
-    }
-
-    deleteData() {
-        localStorage.removeItem(this.EvolutionKeys.evolutions);
+        localStorage.setItem(this.Keys.evolutions, JSON.stringify(list));
     }
 }

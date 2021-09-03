@@ -4,10 +4,6 @@ import { Cache } from "./cache";
 
 @Injectable({ providedIn: 'root' })
 export class PokemonListCache extends Cache {
-    private ListKeys = {
-        pokemonList: 'pokemonList'
-    };
-
     private list: PokemonListItem[] = [];
 
     constructor() {
@@ -22,15 +18,11 @@ export class PokemonListCache extends Cache {
             return this.list;
         }
 
-        this.list = JSON.parse(localStorage.getItem(this.ListKeys.pokemonList) as string) as PokemonListItem[];
+        this.list = JSON.parse(localStorage.getItem(this.Keys.pokemonList) as string) as PokemonListItem[];
         return this.list;
     }
 
     setList(list: PokemonListItem[]) {
-        localStorage.setItem(this.ListKeys.pokemonList, JSON.stringify(list));
-    }
-
-    deleteData() {
-        localStorage.removeItem(this.ListKeys.pokemonList);
+        localStorage.setItem(this.Keys.pokemonList, JSON.stringify(list));
     }
 }

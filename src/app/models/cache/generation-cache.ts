@@ -4,11 +4,6 @@ import { Cache } from "./cache";
 
 @Injectable({ providedIn: 'root' })
 export class GenerationCache extends Cache {
-    private GenerationKeys = {
-        generationId: 'generationid',
-        generations: 'generations'
-    };
-
     private generationId: number;
 
     constructor() {
@@ -19,13 +14,13 @@ export class GenerationCache extends Cache {
 
     getGenerationId(): number {
         if(!this.generationId) {
-            const item = localStorage.getItem(this.GenerationKeys.generationId);
+            const item = localStorage.getItem(this.Keys.generationId);
 
             if(item) {
                 this.generationId = +item;
             } else {
                 this.generationId = 7; // gen 7
-                localStorage.setItem(this.GenerationKeys.generationId, '7');
+                localStorage.setItem(this.Keys.generationId, '7');
             }
         }
 
@@ -37,13 +32,13 @@ export class GenerationCache extends Cache {
 
         this.setExpireTime(new Date());
 
-        localStorage.setItem(this.GenerationKeys.generationId, num.toString());
+        localStorage.setItem(this.Keys.generationId, num.toString());
     }
 
     getGenerations(): Generation[] | null {
         this.checkExpireTime();
 
-        const generations = JSON.parse(localStorage.getItem(this.GenerationKeys.generations) as string);
+        const generations = JSON.parse(localStorage.getItem(this.Keys.generations) as string);
 
         if(!generations) {
             return null;
@@ -53,10 +48,6 @@ export class GenerationCache extends Cache {
     }
 
     setGenerations(generations: Generation[]) {
-        localStorage.setItem(this.GenerationKeys.generations, JSON.stringify(generations));
-    }
-
-    deleteData() {
-        localStorage.removeItem(this.GenerationKeys.generations);
+        localStorage.setItem(this.Keys.generations, JSON.stringify(generations));
     }
 }

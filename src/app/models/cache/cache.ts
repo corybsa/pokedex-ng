@@ -1,15 +1,32 @@
 import * as moment from "moment";
 
 export abstract class Cache {
-    private Keys = {
-        expireTime: 'expire'
+    protected Keys = {
+        expireTime: 'expire',
+        efficacies: 'efficacies',
+        entryPage: 'entryPage',
+        evolutions: 'evolutions',
+        generationId: 'generationid',
+        generations: 'generations',
+        languageId: 'languageId',
+        languages: 'languages',
+        moves: 'moves',
+        pokemon: 'pokemon',
+        pokemonList: 'pokemonList'
     };
 
     constructor() {
         this.checkExpireTime();
     }
 
-    abstract deleteData(): void;
+    deleteData() {
+        localStorage.removeItem(this.Keys.evolutions);
+        localStorage.removeItem(this.Keys.efficacies);
+        localStorage.removeItem(this.Keys.generations);
+        localStorage.removeItem(this.Keys.moves);
+        localStorage.removeItem(this.Keys.pokemon);
+        localStorage.removeItem(this.Keys.pokemonList);
+    }
 
     checkExpireTime() {
         const expireDate = this.getExpireTime();

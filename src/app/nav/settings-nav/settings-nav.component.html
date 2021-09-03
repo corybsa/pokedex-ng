@@ -4,12 +4,10 @@
 </div>
 <div class="nav-separator"></div>
 <div class="nav-item">
-    <mat-form-field>
-        <mat-icon>language</mat-icon>
-        <mat-select [value]="languageId" (valueChange)="changeLanguage($event)">
-            <mat-option *ngFor="let language of languages | async" [value]="language.id">{{language.name}}</mat-option>
-        </mat-select>
-    </mat-form-field>
+    <mat-icon>translate</mat-icon>
+    <mat-select [value]="languageId" (valueChange)="changeLanguage($event)">
+        <mat-option *ngFor="let language of languages | async" [value]="language.id">{{language.name}}</mat-option>
+    </mat-select>
 </div>
 <div class="nav-separator"></div>
 <div class="nav-item" (click)="checkForUpdates()">

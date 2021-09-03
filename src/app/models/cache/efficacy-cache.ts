@@ -4,10 +4,6 @@ import { Cache } from "./cache";
 
 @Injectable({ providedIn: 'root' })
 export class EfficacyCache extends Cache {
-    private EfficacyKeys = {
-        efficacies: 'efficacies'
-    };
-
     constructor() {
         super();
     }
@@ -15,7 +11,7 @@ export class EfficacyCache extends Cache {
     getEfficacies(pokemonId: number): PokemonTypeEfficacies | null {
         this.checkExpireTime();
 
-        let types: PokemonTypeEfficacies[] = JSON.parse(localStorage.getItem(this.EfficacyKeys.efficacies) as string);
+        let types: PokemonTypeEfficacies[] = JSON.parse(localStorage.getItem(this.Keys.efficacies) as string);
 
         if(!types) {
             return null;
@@ -27,17 +23,13 @@ export class EfficacyCache extends Cache {
     }
 
     addEfficacies(type: PokemonTypeEfficacies) {
-        let types = JSON.parse(localStorage.getItem(this.EfficacyKeys.efficacies) as string);
+        let types = JSON.parse(localStorage.getItem(this.Keys.efficacies) as string);
 
         if(!types) {
             types = [];
         }
 
         types.push(type);
-        localStorage.setItem(this.EfficacyKeys.efficacies, JSON.stringify(types));
-    }
-
-    deleteData() {
-        localStorage.removeItem(this.EfficacyKeys.efficacies);
+        localStorage.setItem(this.Keys.efficacies, JSON.stringify(types));
     }
 }

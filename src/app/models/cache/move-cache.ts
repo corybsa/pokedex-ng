@@ -5,10 +5,6 @@ import * as _ from 'underscore';
 
 @Injectable({ providedIn: 'root' })
 export class MoveCache extends Cache {
-    private MoveKeys = {
-        moves: 'moves'
-    };
-
     constructor() {
         super();
     }
@@ -16,7 +12,7 @@ export class MoveCache extends Cache {
     getMoves(pokemonId: number): PokemonMove[] | null {
         this.checkExpireTime();
 
-        let moves: any[] = JSON.parse(localStorage.getItem(this.MoveKeys.moves) as string);
+        let moves: any[] = JSON.parse(localStorage.getItem(this.Keys.moves) as string);
 
         if(!moves) {
             return null;
@@ -28,7 +24,7 @@ export class MoveCache extends Cache {
     }
 
     addMoves(pokemonId: number, moves: PokemonMove[]) {
-        let list = JSON.parse(localStorage.getItem(this.MoveKeys.moves) as string);
+        let list = JSON.parse(localStorage.getItem(this.Keys.moves) as string);
 
         if(!list) {
             list = [];
@@ -36,10 +32,6 @@ export class MoveCache extends Cache {
 
         list.push({ pokemonId, moves });
 
-        localStorage.setItem(this.MoveKeys.moves, JSON.stringify(list));
-    }
-
-    deleteData() {
-        localStorage.removeItem(this.MoveKeys.moves);
+        localStorage.setItem(this.Keys.moves, JSON.stringify(list));
     }
 }
