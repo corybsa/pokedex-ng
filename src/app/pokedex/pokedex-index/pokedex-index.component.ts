@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { Helper } from '../../models/util/helper';
-import { PokemonListItem as PliGQL } from '../../models/pokemon/pokemon-list-item.model';
+import { PokemonListItem } from '../../models/pokemon/pokemon-list-item.model';
 import { PokedexService } from '../../services/pokedex.service';
-import { Storage } from 'src/app/models/util/storage';
+import { EntryPageCache } from 'src/app/models/cache/entry-page-cache';
 
 @Component({
   selector: 'app-pokedex-index',
@@ -12,8 +12,8 @@ import { Storage } from 'src/app/models/util/storage';
   styleUrls: ['./pokedex-index.component.css']
 })
 export class PokedexIndexComponent implements OnInit, OnDestroy {
-  pokemon!: PliGQL[];
-  page!: PliGQL[];
+  pokemon!: PokemonListItem[];
+  page!: PokemonListItem[];
   isSearching = false;
   searchTimeout: number = Infinity;
   helper = Helper;
@@ -28,9 +28,9 @@ export class PokedexIndexComponent implements OnInit, OnDestroy {
   constructor(
     private service: PokedexService,
     private router: Router,
-    private storage: Storage
+    private entryPageCache: EntryPageCache
   ) {
-    this.pageNum = this.storage.getEntryPage();
+    this.pageNum = this.entryPageCache.getEntryPage();
 
     this.service.getPokemonList().subscribe(res => {
       this.pokemon = res;
@@ -42,7 +42,7 @@ export class PokedexIndexComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.storage.setEntryPage(this.pageNum);
+    this.entryPageCache.setEntryPage(this.pageNum);
   }
 
   getPageSize() {

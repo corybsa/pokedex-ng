@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import * as moment from 'moment';
-import { Storage } from '../models/util/storage';
 import { Apollo, gql } from 'apollo-angular';
 import { PokemonListItem } from '../models/pokemon/pokemon-list-item.model';
 import { PokemonType } from '../models/pokemon/pokemon-type.model';
@@ -10,6 +8,10 @@ import { Pokemon } from '../models/pokemon/pokemon.model';
 import { PokemonEvolution } from '../models/pokemon/pokemon-evolution.model';
 import * as _ from 'underscore';
 import { environment } from 'src/environments/environment';
+import { PokemonListCache } from '../models/cache/pokemon-list-cache';
+import { LanguageCache } from '../models/cache/language-cache';
+import { PokemonCache } from '../models/cache/pokemon-cache';
+import { EvolutionCache } from '../models/cache/evolution-cache';
 
 @Injectable({
   providedIn: 'root'
@@ -17,11 +19,14 @@ import { environment } from 'src/environments/environment';
 export class PokedexService {
   constructor(
     private apollo: Apollo,
-    private storage: Storage
+    private languageCache: LanguageCache,
+    private pokemonListCache: PokemonListCache,
+    private pokemonCache: PokemonCache,
+    private evolutionCache: EvolutionCache
   ) {}
 
   getPokemonList(): Observable<PokemonListItem[]> {
-    const list = this.storage.getPokemonList();
+    const list = this.pokemonListCache.getList();
 
     if(list) {
       return new Observable(o => {
@@ -56,7 +61,7 @@ export class PokedexService {
         }
       `,
       variables: {
-        languageId: this.storage.getLanguageId()
+        languageId: this.languageCache.getLanguageId()
       }
     }).valueChanges.pipe(
       map((res: any) => {
@@ -93,13 +98,12 @@ export class PokedexService {
           list.push(item);
         }
 
-        this.storage.setExpireTime(moment().add(1, 'week').toDate());
-        this.storage.setPokemonList(list);
+        this.pokemonListCache.setList(list);
 
         return list;
       }),
       catchError(() => {
-        const list = this.storage.getPokemonList();
+        const list = this.pokemonListCache.getList();
         let res: PokemonListItem[] = [];
 
         if(list) {
@@ -115,7 +119,7 @@ export class PokedexService {
   }
 
   getPokemon(id: number): Observable<Pokemon> {
-    const p = this.storage.getPokemon(id);
+    const p = this.pokemonCache.getPokemon(id);
 
     if(p) {
       return new Observable(o => {
@@ -152,7 +156,7 @@ export class PokedexService {
       `,
       variables: {
         pokemonId: id,
-        languageId: this.storage.getLanguageId()
+        languageId: this.languageCache.getLanguageId()
       }
     }).valueChanges.pipe(
       map((res: any) => {
@@ -180,12 +184,12 @@ export class PokedexService {
           });
         }
 
-        this.storage.addPokemon(pokemon);
+        this.pokemonCache.addPokemon(pokemon);
 
         return pokemon;
       }),
       catchError(() => {
-        const list = this.storage.getPokemon(id);
+        const list = this.pokemonCache.getPokemon(id);
         let res: Pokemon = null as unknown as Pokemon; // wtf
 
         if(list) {
@@ -201,7 +205,7 @@ export class PokedexService {
   }
 
   getEvolutions(chainId: number): Observable<PokemonEvolution[]> {
-    const list = this.storage.getEvolutions(chainId);
+    const list = this.evolutionCache.getEvolutions(chainId);
 
     if(list) {
       return new Observable(o => {
@@ -267,7 +271,7 @@ export class PokedexService {
       `,
       variables: {
         chainId: chainId,
-        languageId: this.storage.getLanguageId()
+        languageId: this.languageCache.getLanguageId()
       }
     }).valueChanges.pipe(
       map((res: any) => {
@@ -316,12 +320,12 @@ export class PokedexService {
         }
 
         const evos = _.uniq(evolutions)
-        this.storage.addEvolutions(chainId, evos);
+        this.evolutionCache.addEvolutions(chainId, evos);
 
         return evos;
       }),
       catchError(() => {
-        const list = this.storage.getEvolutions(chainId);
+        const list = this.evolutionCache.getEvolutions(chainId);
         let res: PokemonEvolution[] = [];
 
         if(list) {

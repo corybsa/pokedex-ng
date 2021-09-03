@@ -3,11 +3,12 @@ import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PokemonTypeEfficacies } from '../models/pokemon/pokemon-type-efficacies.model';
-import { Storage } from '../models/util/storage';
 import * as _ from 'underscore';
 import { PokemonType } from '../models/pokemon/pokemon-type.model';
 import { PokemonTypes } from '../models/util/pokemon-types.model';
 import { environment } from 'src/environments/environment';
+import { LanguageCache } from '../models/cache/language-cache';
+import { EfficacyCache } from '../models/cache/efficacy-cache';
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +16,13 @@ import { environment } from 'src/environments/environment';
 export class PokemonTypesService {
 
   constructor(
-    private storage: Storage,
-    private apollo: Apollo
+    private apollo: Apollo,
+    private languageCache: LanguageCache,
+    private efficacyCache: EfficacyCache
   ) { }
 
   getTypeEfficacies(pokemonId: number): Observable<PokemonTypeEfficacies> {
-    const efficacies = this.storage.getEfficacies(pokemonId);
+    const efficacies = this.efficacyCache.getEfficacies(pokemonId);
 
     if(efficacies) {
       return new Observable(o => {
@@ -50,7 +52,7 @@ export class PokemonTypesService {
       `,
       variables: {
         pokemonId: pokemonId,
-        languageId: this.storage.getLanguageId()
+        languageId: this.languageCache.getLanguageId()
       }
     }).valueChanges.pipe(
       map((res: any) => {
@@ -128,7 +130,7 @@ export class PokemonTypesService {
           efficacies.doubleDamage = this.findTypes(allTypes, damageRelations[0].double);
         }
 
-        this.storage.addEfficacies(efficacies);
+        this.efficacyCache.addEfficacies(efficacies);
 
         return efficacies;
       })

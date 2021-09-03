@@ -4,8 +4,9 @@ import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { PokemonMove } from '../models/pokemon/pokemon-move.model';
-import { Storage } from '../models/util/storage';
 import * as _ from 'underscore';
+import { LanguageCache } from '../models/cache/language-cache';
+import { MoveCache } from '../models/cache/move-cache';
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +15,12 @@ export class PokemonMovesService {
 
   constructor(
     private apollo: Apollo,
-    private storage: Storage
+    private languageCache: LanguageCache,
+    private moveCache: MoveCache
   ) { }
 
   getMovesLearnedByLevelUp(pokemonId: number): Observable<PokemonMove[]> {
-    const list = this.storage.getMoves(pokemonId);
+    const list = this.moveCache.getMoves(pokemonId);
 
     if(list) {
       return new Observable(o => {
@@ -27,7 +29,6 @@ export class PokemonMovesService {
       });
     }
 
-    // TODO: store method in localStorage and pass it as variable
     const method = 1; // level up
 
     // TODO: store version in localStorage and pass it as variable
@@ -71,7 +72,7 @@ export class PokemonMovesService {
         pokemonId: pokemonId,
         generationId: generationId,
         method: method,
-        languageId: this.storage.getLanguageId()
+        languageId: this.languageCache.getLanguageId()
       }
     }).valueChanges.pipe(
       map((res: any) => {
@@ -96,12 +97,12 @@ export class PokemonMovesService {
         }
 
         pokemonMoves = _.sortBy(pokemonMoves, move => Math.min(move.levelLearned));
-        this.storage.addMoves(pokemonId, pokemonMoves);
+        this.moveCache.addMoves(pokemonId, pokemonMoves);
 
         return pokemonMoves;
       }),
       catchError(() => {
-        const list = this.storage.getMoves(pokemonId);
+        const list = this.moveCache.getMoves(pokemonId);
         let res: PokemonMove[] = [];
 
         if(list) {

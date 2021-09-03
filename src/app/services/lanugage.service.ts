@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { LanguageCache } from '../models/cache/language-cache';
 import { Language } from '../models/util/language';
-import { Storage } from '../models/util/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +11,20 @@ import { Storage } from '../models/util/storage';
 export class LanugageService {
 
   constructor(
-    private storage: Storage,
-    private apollo: Apollo
+    private apollo: Apollo,
+    private languageCache: LanguageCache
   ) { }
 
   getLanguages(): Observable<Language[]> {
+    const langs = this.languageCache.getLanguages();
+
+    if(langs) {
+      return new Observable(o => {
+        o.next(langs);
+        o.complete();
+      });
+    }
+
     return this.apollo.watchQuery({
       query: gql`
         query getLanguages${environment.name} {
@@ -39,6 +48,8 @@ export class LanugageService {
             name: language.pokemonV2LanguagenamesByLocalLanguageId.find((item: any) => item.language_id === language.id).name
           });
         }
+
+        this.languageCache.setLanguages(languages);
 
         return languages;
       })

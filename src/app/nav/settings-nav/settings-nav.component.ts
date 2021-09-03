@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { Apollo } from 'apollo-angular';
 import { Observable } from 'rxjs';
+import { LanguageCache } from 'src/app/models/cache/language-cache';
 import { Language } from 'src/app/models/util/language';
-import { Storage } from 'src/app/models/util/storage';
 import { LanugageService } from 'src/app/services/lanugage.service';
 
 @Component({
@@ -15,12 +15,16 @@ import { LanugageService } from 'src/app/services/lanugage.service';
 export class SettingsNavComponent implements OnInit {
   languages: Observable<Language[]>;
 
+  get languageId(): number {
+    return this.languageCache.getLanguageId();
+  }
+
   constructor(
     private updates: SwUpdate,
     private router: Router,
     private apollo: Apollo,
     private service: LanugageService,
-    public storage: Storage
+    private languageCache: LanguageCache
   ) {
     this.languages = this.service.getLanguages();
   }
@@ -46,7 +50,7 @@ export class SettingsNavComponent implements OnInit {
   }
 
   changeLanguage(langId: number) {
-    this.storage.setLanguageId(langId);
+    this.languageCache.setLanguageId(langId);
     this.apollo.client.clearStore();
     this.apollo.client.resetStore();
     location.replace('/');
