@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { PokemonEvolution } from 'src/app/models/pokemon/pokemon-evolution.model';
 import { Pokemon } from 'src/app/models/pokemon/pokemon.model';
 import { EvolutionTrigger } from 'src/app/models/util/evolution-trigger.model';
-import { PokedexService } from 'src/app/services/pokedex.service';
+import { EvolutionService } from 'src/app/services/evolution.service';
 
 @Component({
   selector: 'app-pokedex-entry-evolutions',
@@ -16,7 +16,7 @@ export class PokedexEntryEvolutionsComponent implements OnInit, OnChanges {
   evoTrigger = EvolutionTrigger;
 
   constructor(
-    private service: PokedexService,
+    private service: EvolutionService,
     private router: Router
   ) { }
 
