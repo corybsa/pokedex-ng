@@ -30,7 +30,6 @@ export class LanguageCache extends Cache {
     setLanguageId(num: number) {
         this.languageId = num;
         
-        this.setExpireTime(new Date());
         this.deleteData();
 
         localStorage.setItem(this.Keys.languageId, num.toString());

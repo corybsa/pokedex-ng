@@ -3,7 +3,7 @@ mat-drawer-container {
 }
 
 mat-drawer {
-    min-width: 80%;
+    width: 80%;
 }
 
 .top-bar {
@@ -23,6 +23,12 @@ mat-drawer {
     margin-top: 13px;
     margin-left: 13px;
     color: white;
+}
+
+.top-bar mat-icon.generation-picker {
+    float: right;
+    margin-left: 0;
+    margin-right: 13px;
 }
 
 .top-bar span {
@@ -57,4 +63,8 @@ mat-drawer {
     height: 1px;
     background-color: hsl(0, 0%, 83%);
     margin: 10px 5px 0px;
+}
+
+.current-gen {
+    background-color: hsl(0, 0%, 87%);
 }

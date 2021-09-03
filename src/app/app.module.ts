@@ -14,6 +14,7 @@ import { GraphQLModule } from './graphql.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NavModule } from './nav/nav.module';
 import { NavComponent } from './nav/nav.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { NavComponent } from './nav/nav.component';
     MatSidenavModule,
     MatIconModule,
     MatSnackBarModule,
+    MatMenuModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the app is stable

@@ -30,7 +30,7 @@ export class GenerationCache extends Cache {
     setGenerationId(num: number) {
         this.generationId = num;
 
-        this.setExpireTime(new Date());
+        this.deleteData();
 
         localStorage.setItem(this.Keys.generationId, num.toString());
     }

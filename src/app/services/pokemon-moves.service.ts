@@ -7,6 +7,7 @@ import { PokemonMove } from '../models/pokemon/pokemon-move.model';
 import * as _ from 'underscore';
 import { LanguageCache } from '../models/cache/language-cache';
 import { MoveCache } from '../models/cache/move-cache';
+import { GenerationCache } from '../models/cache/generation-cache';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class PokemonMovesService {
   constructor(
     private apollo: Apollo,
     private languageCache: LanguageCache,
-    private moveCache: MoveCache
+    private moveCache: MoveCache,
+    private generationCache: GenerationCache
   ) { }
 
   getMovesLearnedByLevelUp(pokemonId: number): Observable<PokemonMove[]> {
@@ -28,11 +30,6 @@ export class PokemonMovesService {
         o.complete();
       });
     }
-
-    const method = 1; // level up
-
-    // TODO: store version in localStorage and pass it as variable
-    const generationId = 7; // gen 7
 
     return this.apollo.watchQuery({
       query: gql`
@@ -70,8 +67,8 @@ export class PokemonMovesService {
       `,
       variables: {
         pokemonId: pokemonId,
-        generationId: generationId,
-        method: method,
+        generationId: this.generationCache.getGenerationId(),
+        method: 1, // level up
         languageId: this.languageCache.getLanguageId()
       }
     }).valueChanges.pipe(

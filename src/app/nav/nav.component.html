@@ -9,6 +9,14 @@
         <div class="top-bar">
             <mat-icon (click)="drawer.toggle()">menu</mat-icon>
             <span>Pokedex</span>
+            <mat-icon class="generation-picker" [matMenuTriggerFor]="genPicker">mediation</mat-icon>
+            <mat-menu #genPicker="matMenu">
+                <button
+                    *ngFor="let gen of generations | async"
+                    mat-menu-item
+                    [ngClass]="{ 'current-gen': gen.id === currentGen }"
+                    (click)="changeGeneration(gen.id)">{{ gen.name }}</button>
+            </mat-menu>
         </div>
 
         <ng-content></ng-content>

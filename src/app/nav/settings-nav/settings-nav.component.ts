@@ -3,8 +3,11 @@ import { Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { Apollo } from 'apollo-angular';
 import { Observable } from 'rxjs';
+import { GenerationCache } from 'src/app/models/cache/generation-cache';
 import { LanguageCache } from 'src/app/models/cache/language-cache';
+import { Generation } from 'src/app/models/util/generation.model';
 import { Language } from 'src/app/models/util/language';
+import { GenerationsService } from 'src/app/services/generations.service';
 import { LanugageService } from 'src/app/services/lanugage.service';
 
 @Component({
@@ -14,19 +17,27 @@ import { LanugageService } from 'src/app/services/lanugage.service';
 })
 export class SettingsNavComponent implements OnInit {
   languages: Observable<Language[]>;
+  generations: Observable<Generation[]>;
 
   get languageId(): number {
     return this.languageCache.getLanguageId();
+  }
+
+  get generationId(): number {
+    return this.generationCache.getGenerationId();
   }
 
   constructor(
     private updates: SwUpdate,
     private router: Router,
     private apollo: Apollo,
-    private service: LanugageService,
-    private languageCache: LanguageCache
+    private languageService: LanugageService,
+    private generationService: GenerationsService,
+    private languageCache: LanguageCache,
+    private generationCache: GenerationCache
   ) {
-    this.languages = this.service.getLanguages();
+    this.languages = this.languageService.getLanguages();
+    this.generations = this.generationService.getGenerations();
   }
 
   ngOnInit(): void {
@@ -53,6 +64,13 @@ export class SettingsNavComponent implements OnInit {
     this.languageCache.setLanguageId(langId);
     this.apollo.client.clearStore();
     this.apollo.client.resetStore();
-    location.replace('/');
+    location.reload();
+  }
+
+  changeGeneration(genId: number) {
+    this.generationCache.setGenerationId(genId);
+    this.apollo.client.clearStore();
+    this.apollo.client.resetStore();
+    location.reload();
   }
 }

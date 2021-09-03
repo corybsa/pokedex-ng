@@ -6,7 +6,14 @@
 <div class="nav-item">
     <mat-icon>translate</mat-icon>
     <mat-select [value]="languageId" (valueChange)="changeLanguage($event)">
-        <mat-option *ngFor="let language of languages | async" [value]="language.id">{{language.name}}</mat-option>
+        <mat-option *ngFor="let language of languages | async" [value]="language.id">{{ language.name }}</mat-option>
+    </mat-select>
+</div>
+<div class="nav-separator"></div>
+<div class="nav-item">
+    <mat-icon>translate</mat-icon>
+    <mat-select [value]="generationId" (valueChange)="changeGeneration($event)">
+        <mat-option *ngFor="let generation of generations | async" [value]="generation.id">{{ generation.name }}</mat-option>
     </mat-select>
 </div>
 <div class="nav-separator"></div>

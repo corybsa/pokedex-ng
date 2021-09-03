@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable } from '@apollo/client/utilities';
 import { Apollo, gql } from 'apollo-angular';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { GenerationCache } from '../models/cache/generation-cache';
 import { LanguageCache } from '../models/cache/language-cache';
+import { Generation } from '../models/util/generation.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class GenerationsService {
     private generationCache: GenerationCache
   ) { }
 
-  getGenerations() {
+  getGenerations(): Observable<Generation[]> {
     const gens = this.generationCache.getGenerations();
 
     if(gens) {
@@ -44,7 +44,7 @@ export class GenerationsService {
     }).valueChanges.pipe(
       map((res: any) => {
         const data = res.data.generations;
-        const generations = [];
+        const generations: Generation[] = [];
 
         for(let gen of data) {
           generations.push({
