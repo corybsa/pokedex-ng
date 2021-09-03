@@ -11,7 +11,7 @@
 </div>
 <div class="nav-separator"></div>
 <div class="nav-item">
-    <mat-icon>translate</mat-icon>
+    <mat-icon>mediation</mat-icon>
     <mat-select [value]="generationId" (valueChange)="changeGeneration($event)">
         <mat-option *ngFor="let generation of generations | async" [value]="generation.id">{{ generation.name }}</mat-option>
     </mat-select>
