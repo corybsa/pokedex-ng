@@ -1,1 +1,7 @@
+mat-select {
+    width: 80%;
+}
 
+:host::ng-deep mat-select .mat-select-min-line {
+    top: 4px;
+}
