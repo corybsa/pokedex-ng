@@ -7,6 +7,5 @@ export interface Pokemon {
     height: number;
     weight: number;
     evolutionChainId: number;
-    spriteUrl: string;
     types: PokemonType[];
 }

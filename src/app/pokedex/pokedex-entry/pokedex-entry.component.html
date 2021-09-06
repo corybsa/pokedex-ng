@@ -2,7 +2,8 @@
     <mat-icon class="back" (click)="back()">arrow_back_ios</mat-icon>
     <mat-card *ngIf="pokemon" style="margin-bottom: 10px;">
         <mat-card-header>
-            <img mat-card-avatar [src]="pokemon.spriteUrl" [alt]="pokemon.localeName">
+            <img *ngIf="!showShinySprite" mat-card-avatar src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{pokemon.id}}.png" [alt]="pokemon.localeName" (click)="toggleShinySprite()">
+            <img *ngIf="showShinySprite" mat-card-avatar src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/{{pokemon.id}}.png" [alt]="pokemon.localeName" (click)="toggleShinySprite()">
             <mat-card-title>{{ pokemon.localeName }}</mat-card-title>
             <mat-card-subtitle>
                 <app-type-list [types]="pokemon.types"></app-type-list>

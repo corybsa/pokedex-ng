@@ -12,6 +12,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 })
 export class PokedexEntryComponent implements OnInit {
   pokemon!: Pokemon;
+  showShinySprite = false;
 
   @ViewChild('moves', { read: ViewContainerRef })
   movesRef!: ViewContainerRef;
@@ -24,6 +25,7 @@ export class PokedexEntryComponent implements OnInit {
     private router: Router
   ) {
     this.route.params.subscribe(values => {
+      this.showShinySprite = false;
       this.getPokemonData(+values.id);
     });
   }
@@ -47,5 +49,9 @@ export class PokedexEntryComponent implements OnInit {
 
   convertToPounds(weight: number) {
     return (weight * 0.2205).toFixed(1);
+  }
+
+  toggleShinySprite() {
+    this.showShinySprite = !this.showShinySprite;
   }
 }

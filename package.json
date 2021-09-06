@@ -1,10 +1,10 @@
 {
   "name": "pokedex",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build -c production",
+    "build": "ng build -c production && aws s3 cp --recursive ./dist s3://therealuncleguy.com/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

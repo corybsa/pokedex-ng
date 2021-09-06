@@ -5,9 +5,11 @@
             <ng-container [ngSwitch]="evo.evolutionTriggerId">
                 <div class="evo-stage-indicator" *ngSwitchCase="evoTrigger.LevelUp">
                     <span *ngIf="evo.minLevel">Lv. {{ evo.minLevel }}</span>
-                    <span *ngIf="evo.minHappiness || evo.minAffection">Level up with high happiness</span>
+                    <span *ngIf="evo.minHappiness">with high happiness</span>
+                    <span *ngIf="evo.minAffection">with level {{ evo.minAffection }} affection</span>
                     <span *ngIf="evo.knownMoveTypeId">and know a {{ evo.knownMoveTypeName }} type move</span>
                     <span *ngIf="evo.timeOfDay !== ''">during the {{ evo.timeOfDay }}</span>
+                    <span *ngIf="evo.turnUpsideDown">while the game system is upside down</span>
                 </div>
                 <div class="evo-stage-indicator" *ngSwitchCase="evoTrigger.Trade">
                     <span>Trade</span>

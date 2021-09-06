@@ -166,7 +166,6 @@ export class PokedexService {
         pokemon.height = p.height;
         pokemon.weight = p.weight;
         pokemon.evolutionChainId = p.pokemon_v2_pokemonspecy.evolution_chain_id;
-        pokemon.spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`;
         pokemon.types = [{
           id: p.pokemon_v2_pokemontypes[0].pokemon_v2_type.id,
           name: p.pokemon_v2_pokemontypes[0].pokemon_v2_type.name,
