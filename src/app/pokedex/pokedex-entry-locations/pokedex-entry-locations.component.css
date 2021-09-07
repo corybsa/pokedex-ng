@@ -1,0 +1,17 @@
+.location-card,
+.location-version-container {
+    margin: 0 1px 10px 1px;
+}
+
+.location-version-name,
+.location-condition-chance {
+    font-weight: bold;
+}
+
+.location-condition-name {
+    display: block;
+}
+
+.location-condition-container {
+    margin-top: 5px;
+}

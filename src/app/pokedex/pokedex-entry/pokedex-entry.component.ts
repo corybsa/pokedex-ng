@@ -14,11 +14,6 @@ export class PokedexEntryComponent implements OnInit {
   pokemon!: Pokemon;
   showShinySprite = false;
 
-  @ViewChild('moves', { read: ViewContainerRef })
-  movesRef!: ViewContainerRef;
-
-  movesComponent!: ComponentRef<any>;
-
   constructor(
     private service: PokedexService,
     private route: ActivatedRoute,

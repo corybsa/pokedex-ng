@@ -1,0 +1,25 @@
+<mat-accordion>
+    <mat-expansion-panel *ngFor="let location of locations">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{ location.locationName }}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-card *ngFor="let version of location.versions" class="location-version-container">
+            <mat-card-title>{{ version.name }}</mat-card-title>
+            <ng-container *ngFor="let method of version.methods">
+                <mat-card-subtitle>Levels {{ method.minLevel }} - {{ method.maxLevel }}</mat-card-subtitle>
+                <mat-card-content *ngFor="let condition of method.conditions">
+                    <span class="location-condition-chance">{{ condition.chance }}% </span>
+                    <span class="location-method-name">{{ method.name }}</span>
+                    <span class="location-condition-name">{{ condition.name }}</span>
+                </mat-card-content>
+            </ng-container>
+        </mat-card>
+    </mat-expansion-panel>
+</mat-accordion>
+
+<mat-card *ngIf="locations.length === 0" class="location-card">
+    <mat-card-content>No location information.</mat-card-content>
+</mat-card>

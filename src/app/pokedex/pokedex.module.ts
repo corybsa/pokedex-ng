@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { FormsModule } from '@angular/forms';
 import { PokedexIndexComponent } from './pokedex-index/pokedex-index.component';
 import { PokedexEntryComponent } from './pokedex-entry/pokedex-entry.component';
@@ -16,6 +17,7 @@ import { PokedexEntryMovesComponent } from './pokedex-entry-moves/pokedex-entry-
 import { PokedexEntryTypesComponent } from './pokedex-entry-types/pokedex-entry-types.component';
 import { PokedexEntryEvolutionsComponent } from './pokedex-entry-evolutions/pokedex-entry-evolutions.component';
 import { TypeListComponent } from './type-list/type-list.component';
+import { PokedexEntryLocationsComponent } from './pokedex-entry-locations/pokedex-entry-locations.component';
 
 
 @NgModule({
@@ -25,7 +27,8 @@ import { TypeListComponent } from './type-list/type-list.component';
     PokedexEntryMovesComponent,
     PokedexEntryTypesComponent,
     PokedexEntryEvolutionsComponent,
-    TypeListComponent
+    TypeListComponent,
+    PokedexEntryLocationsComponent
   ],
   imports: [
     CommonModule,
@@ -37,7 +40,8 @@ import { TypeListComponent } from './type-list/type-list.component';
     MatIconModule,
     MatSidenavModule,
     MatInputModule,
-    MatTabsModule
+    MatTabsModule,
+    MatExpansionModule
   ]
 })
 export class PokdexModule { }
