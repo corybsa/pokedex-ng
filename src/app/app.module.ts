@@ -15,6 +15,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NavModule } from './nav/nav.module';
 import { NavComponent } from './nav/nav.component';
 import { MatMenuModule } from '@angular/material/menu';
+import { PokemapModule } from './pokemap/pokemap.module';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { MatMenuModule } from '@angular/material/menu';
       // Register the ServiceWorker as soon as the app is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
-    })
+    }),
+    PokemapModule
   ],
   providers: [],
   bootstrap: [AppComponent]

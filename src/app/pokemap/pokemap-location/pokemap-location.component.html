@@ -1,0 +1,27 @@
+<mat-icon (click)="back()">arrow_back_ios</mat-icon>
+<h1>{{ region?.name }}</h1>
+<h2>{{ encounters[0]?.locationName }}</h2>
+<mat-accordion>
+    <mat-expansion-panel *ngFor="let encounter of encounters">
+        <mat-expansion-panel-header>
+            <mat-panel-title>{{ encounter.pokemonName }}</mat-panel-title>
+            <mat-panel-description>{{ encounter.locationAreaName }}</mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <mat-card *ngFor="let version of encounter.versions" class="encounter-version-container">
+            <mat-card-title>{{ version.name }}</mat-card-title>
+            <ng-container *ngFor="let method of version.methods">
+                <mat-card-subtitle>Levels {{ method.minLevel }} - {{ method.maxLevel }}</mat-card-subtitle>
+                <mat-card-content *ngFor="let condition of method.conditions">
+                    <span class="encounter-condition-chance">{{ condition.chance }}% </span>
+                    <span class="encounter-method-name">{{ method.name }}</span>
+                    <span class="encounter-condition-name">{{ condition.name }}</span>
+                </mat-card-content>
+            </ng-container>
+        </mat-card>
+    </mat-expansion-panel>
+</mat-accordion>
+
+<mat-card *ngIf="encounters.length === 0" class="encounter-card">
+    <mat-card-content>No location information.</mat-card-content>
+</mat-card>

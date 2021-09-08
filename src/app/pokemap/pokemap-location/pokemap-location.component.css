@@ -1,0 +1,27 @@
+h1, h2 {
+    text-align: center;
+}
+
+mat-icon {
+    position: absolute;
+    top: 70px;
+    left: 20px;
+}
+
+.encounter-card,
+.encounter-version-container {
+    margin: 0 1px 10px 1px;
+}
+
+.encounter-version-name,
+.encounter-condition-chance {
+    font-weight: bold;
+}
+
+.encounter-condition-name {
+    display: block;
+}
+
+.encounter-condition-container {
+    margin-top: 5px;
+}

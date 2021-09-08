@@ -13,7 +13,9 @@ export abstract class Cache {
         moves: 'moves',
         pokemon: 'pokemon',
         pokemonList: 'pokemonList',
-        pokemonLocations: 'pokemonLocations'
+        pokemonLocations: 'pokemonLocations',
+        locationEncounters: 'locationEncounters',
+        regions: 'regions'
     };
 
     constructor() {

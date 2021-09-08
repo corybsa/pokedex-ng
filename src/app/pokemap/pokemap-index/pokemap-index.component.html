@@ -1,0 +1,14 @@
+<mat-card *ngFor="let region of regions" class="region-card">
+    <mat-card-title>{{ region.name }}</mat-card-title>
+    <mat-card-content>
+        <mat-form-field appearance="fill">
+            <mat-label>Location</mat-label>
+            <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayItem" (optionSelected)="locationSelected($event, region)">
+                <mat-option *ngFor="let location of region.locations" [value]="location">
+                    {{ location.name }}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </mat-card-content>
+</mat-card>
