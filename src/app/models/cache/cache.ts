@@ -29,6 +29,7 @@ export abstract class Cache {
         localStorage.removeItem(this.Keys.moves);
         localStorage.removeItem(this.Keys.pokemon);
         localStorage.removeItem(this.Keys.pokemonList);
+        localStorage.removeItem(this.Keys.pokemonLocations);
     }
 
     checkExpireTime() {

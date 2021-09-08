@@ -2,7 +2,7 @@
     <mat-expansion-panel *ngFor="let location of locations">
         <mat-expansion-panel-header>
             <mat-panel-title>
-                {{ location.locationName }} ({{ location.locationAreaName }})
+                {{ location.locationName }} <span *ngIf="location.locationAreaName">({{ location.locationAreaName }})</span>
             </mat-panel-title>
         </mat-expansion-panel-header>
 

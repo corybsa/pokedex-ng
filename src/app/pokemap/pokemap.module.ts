@@ -5,12 +5,11 @@ import { PokemapRoutingModule } from './pokemap-routing.module';
 import { PokemapIndexComponent } from './pokemap-index/pokemap-index.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { PokemapLocationComponent } from './pokemap-location/pokemap-location.component';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -24,10 +23,9 @@ import { MatIconModule } from '@angular/material/icon';
     PokemapRoutingModule,
     MatExpansionModule,
     MatCardModule,
-    MatAutocompleteModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule,
+    MatButtonModule
   ]
 })
 export class PokemapModule { }

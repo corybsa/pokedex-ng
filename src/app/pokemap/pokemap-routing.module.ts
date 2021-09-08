@@ -5,7 +5,7 @@ import { PokemapLocationComponent } from './pokemap-location/pokemap-location.co
 
 const routes: Routes = [
   { path: '', component: PokemapIndexComponent },
-  { path: ':locationId', component: PokemapLocationComponent }
+  { path: ':regionId/:locationId', component: PokemapLocationComponent }
 ];
 
 @NgModule({

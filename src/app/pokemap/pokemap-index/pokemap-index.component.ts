@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { Location } from 'src/app/models/location/location.model';
 import { Region } from 'src/app/models/location/region.model';
@@ -29,8 +29,7 @@ export class PokemapIndexComponent implements OnInit {
     return location && location.name ? location.name : '';
   }
 
-  locationSelected(e: MatAutocompleteSelectedEvent, region: Region) {
-    localStorage.setItem('selectedRegion', JSON.stringify(region));
-    this.router.navigate(['pokemap', e.option.value.id]);
+  locationSelected(e: MatSelectChange, region: Region) {
+    this.router.navigate(['pokemap', region.id, e.value.id]);
   }
 }

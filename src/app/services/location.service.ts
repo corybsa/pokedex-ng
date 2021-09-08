@@ -71,7 +71,7 @@ export class LocationService {
           regions.push({
             id: region.id,
             name: region.pokemon_v2_regionnames[0]?.name,
-            locations: locations
+            locations: _.sortBy(locations, 'name')
           });
         }
 
