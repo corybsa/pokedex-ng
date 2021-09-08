@@ -16,9 +16,8 @@
                 <ng-container *ngFor="let method of version.methods">
                     <mat-card-subtitle>Levels {{ method.minLevel }} - {{ method.maxLevel }}</mat-card-subtitle>
                     <mat-card-content *ngFor="let condition of method.conditions">
-                        <span class="encounter-condition-chance">{{ condition.chance }}% </span>
-                        <span class="encounter-method-name">{{ method.name }}</span>
-                        <span class="encounter-condition-name">{{ condition.name }}</span>
+                        <span class="encounter-condition-chance">{{ condition.chance / condition.chanceFactor }}%</span>
+                        <span class="encounter-method-name"> {{ method.name }} {{ condition.name?.toLowerCase() }}</span>
                     </mat-card-content>
                 </ng-container>
             </mat-card>

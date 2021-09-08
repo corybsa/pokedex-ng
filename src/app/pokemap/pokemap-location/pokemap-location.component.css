@@ -23,10 +23,6 @@ mat-icon {
     font-weight: bold;
 }
 
-.encounter-condition-name {
-    display: block;
-}
-
 .encounter-condition-container {
     margin-top: 5px;
 }

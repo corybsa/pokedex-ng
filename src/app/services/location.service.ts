@@ -248,6 +248,7 @@ export class LocationService {
         conditionId: d.pokemon_v2_encounterconditionvaluemaps[0]?.pokemon_v2_encounterconditionvalue.pokemon_v2_encounterconditionvaluenames[0].encounter_condition_value_id,
         condition: d.pokemon_v2_encounterconditionvaluemaps[0]?.pokemon_v2_encounterconditionvalue.pokemon_v2_encounterconditionvaluenames[0].name,
         chance: d.pokemon_v2_encounterslot.rarity,
+        chanceFactor: d.pokemon_v2_encounterslot.pokemon_v2_versiongroup.pokemon_v2_versions.length,
         methodId: d.pokemon_v2_encounterslot.pokemon_v2_encountermethod.id,
         methodName: d.pokemon_v2_encounterslot.pokemon_v2_encountermethod.pokemon_v2_encountermethodnames[0]?.name
       });
@@ -284,7 +285,8 @@ export class LocationService {
               method.conditions.push({
                 id: t.conditionId,
                 name: t.condition,
-                chance: t.chance
+                chance: t.chance,
+                chanceFactor: t.chanceFactor
               });
             }
           } else {
@@ -297,7 +299,8 @@ export class LocationService {
               conditions: [{
                 id: t.conditionId,
                 name: t.condition,
-                chance: t.chance
+                chance: t.chance,
+                chanceFactor: t.chanceFactor
               }]
             });
           }
@@ -314,7 +317,8 @@ export class LocationService {
               conditions: [{
                 id: t.conditionId,
                 name: t.condition,
-                chance: t.chance
+                chance: t.chance,
+                chanceFactor: t.chanceFactor
               }]
             }]
           });
@@ -336,7 +340,8 @@ export class LocationService {
               conditions: [{
                 id: t.conditionId,
                 name: t.condition,
-                chance: t.chance
+                chance: t.chance,
+                chanceFactor: t.chanceFactor
               }]
             }]
           }]
