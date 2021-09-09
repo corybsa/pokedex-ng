@@ -1,13 +1,12 @@
 import { Injectable } from "@angular/core";
-import { PokemonLocation } from "../location/pokemon-location.model";
 import { Cache } from "./cache";
 import * as _ from 'underscore';
-import { LocationEncounter } from "../location/location-encounter.model";
 import { Region } from "../location/region.model";
+import { VersionLocationEncounter } from "../location/version-location-encounter.model";
 
 @Injectable({ providedIn: 'root' })
 export class LocationCache extends Cache {
-    getPokemonLocations(pokemonId: number): PokemonLocation[] | null {
+    getPokemonLocations(pokemonId: number): VersionLocationEncounter[] | null {
         let locations: any[] = JSON.parse(localStorage.getItem(this.Keys.pokemonLocations) as string);
 
         if(!locations) {
@@ -18,7 +17,7 @@ export class LocationCache extends Cache {
         return list ? list.locations : null;
     }
 
-    addPokemonLocations(pokemonId: number, locations: PokemonLocation[]) {
+    addPokemonLocations(pokemonId: number, locations: VersionLocationEncounter[]) {
         let list = JSON.parse(localStorage.getItem(this.Keys.pokemonLocations) as string);
 
         if(!list) {
@@ -30,7 +29,7 @@ export class LocationCache extends Cache {
         localStorage.setItem(this.Keys.pokemonLocations, JSON.stringify(list));
     }
 
-    getLocationEncounters(locationId: number): LocationEncounter[] | null {
+    getLocationEncounters(locationId: number): VersionLocationEncounter[] | null {
         let encounters: any[] = JSON.parse(localStorage.getItem(this.Keys.locationEncounters) as string);
 
         if(!encounters) {
@@ -41,7 +40,7 @@ export class LocationCache extends Cache {
         return list ? list.encounters : null;
     }
 
-    addLocationEncounters(locationId: number, encounters: LocationEncounter[]) {
+    addLocationEncounters(locationId: number, encounters: VersionLocationEncounter[]) {
         let list = JSON.parse(localStorage.getItem(this.Keys.locationEncounters) as string);
 
         if(!list) {

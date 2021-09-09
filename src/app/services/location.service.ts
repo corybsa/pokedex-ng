@@ -5,11 +5,10 @@ import { environment } from 'src/environments/environment';
 import { GenerationCache } from '../models/cache/generation-cache';
 import { LanguageCache } from '../models/cache/language-cache';
 import { Location } from '../models/location/location.model';
-import { PokemonLocation } from '../models/location/pokemon-location.model';
 import * as _ from 'underscore';
 import { LocationCache } from '../models/cache/location-cache';
 import { Region } from '../models/location/region.model';
-import { LocationEncounter } from '../models/location/location-encounter.model';
+import { VersionLocationEncounter } from '../models/location/version-location-encounter.model';
 
 @Injectable({
   providedIn: 'root'
@@ -82,7 +81,7 @@ export class LocationService {
     );
   }
 
-  getPokemonLocations(pokemonId: number): Observable<PokemonLocation[]> {
+  getPokemonLocations(pokemonId: number): Observable<VersionLocationEncounter[]> {
     const locations = this.locationCache.getPokemonLocations(pokemonId);
 
     if(locations) {
@@ -98,6 +97,12 @@ export class LocationService {
           pokemon_v2_encounter(where: {pokemon_id: {_eq: $pokemonId}, pokemon_v2_version: {pokemon_v2_versiongroup: {generation_id: {_eq: $generationId}}}}, order_by: {location_area_id: asc}) {
             min_level
             max_level
+            pokemon_v2_version {
+              id
+              pokemon_v2_versionnames(where: {language_id: {_eq: $languageId}}) {
+                name
+              }
+            }
             pokemon_v2_locationarea {
               id
               pokemon_v2_location {
@@ -111,14 +116,6 @@ export class LocationService {
             }
             pokemon_v2_encounterslot {
               rarity
-              version_group_id
-              pokemon_v2_versiongroup {
-                pokemon_v2_versions {
-                  pokemon_v2_versionnames(where: {language_id: {_eq: $languageId}}) {
-                    name
-                  }
-                }
-              }
               pokemon_v2_encountermethod {
                 id
                 pokemon_v2_encountermethodnames(where: {language_id: {_eq: $languageId}}) {
@@ -144,15 +141,20 @@ export class LocationService {
       }
     }).valueChanges.pipe(
       map((res: any) => {
-        const locations = this.parseLocations<PokemonLocation>(res);
-        this.locationCache.addPokemonLocations(pokemonId, locations);
+        const encounters = this.parseLocations(res);
 
-        return locations;
+        for(let encounter of encounters) {
+          encounter.locations = _.sortBy(encounter.locations, 'locationName');
+        }
+
+        this.locationCache.addPokemonLocations(pokemonId, encounters);
+
+        return encounters;
       })
     );
   }
 
-  getLocationEncounters(locationId: number): Observable<LocationEncounter[]> {
+  getLocationEncounters(locationId: number): Observable<VersionLocationEncounter[]> {
     const encounters = this.locationCache.getLocationEncounters(locationId);
 
     if(encounters) {
@@ -168,6 +170,12 @@ export class LocationService {
           pokemon_v2_encounter(where: {pokemon_v2_locationarea: {location_id: {_eq: $locationId}}}, order_by: {location_area_id: asc, pokemon_v2_version: {pokemon_v2_versiongroup: {generation_id: asc}}}) {
             min_level
             max_level
+            pokemon_v2_version {
+              id
+              pokemon_v2_versionnames(where: {language_id: {_eq: $languageId}}) {
+                name
+              }
+            }
             pokemon_v2_pokemon {
               id
               pokemon_v2_pokemonspecy {
@@ -189,14 +197,6 @@ export class LocationService {
             }
             pokemon_v2_encounterslot {
               rarity
-              version_group_id
-              pokemon_v2_versiongroup {
-                pokemon_v2_versions {
-                  pokemon_v2_versionnames(where: {language_id: {_eq: $languageId}}) {
-                    name
-                  }
-                }
-              }
               pokemon_v2_encountermethod {
                 id
                 pokemon_v2_encountermethodnames(where: {language_id: {_eq: $languageId}}) {
@@ -221,7 +221,12 @@ export class LocationService {
       }
     }).valueChanges.pipe(
       map((res: any) => {
-        const encounters = _.sortBy(this.parseLocations<LocationEncounter>(res), 'pokemonName');
+        const encounters = this.parseLocations(res);
+
+        for(let encounter of encounters) {
+          encounter.locations = _.sortBy(encounter.locations, 'pokemonName');
+        }
+
         this.locationCache.addLocationEncounters(locationId, encounters);
 
         return encounters;
@@ -229,10 +234,10 @@ export class LocationService {
     );
   }
 
-  parseLocations<T extends PokemonLocation | LocationEncounter>(res: any): T[] {
+  parseLocations(res: any): VersionLocationEncounter[] {
     const data = res.data.pokemon_v2_encounter;
     const temp: any[] = [];
-    const final: T[] = [];
+    const final: VersionLocationEncounter[] = [];
 
     for(let d of data) {
       temp.push({
@@ -241,57 +246,54 @@ export class LocationService {
         locationName: d.pokemon_v2_locationarea.pokemon_v2_location.pokemon_v2_locationnames[0]?.name,
         pokemonId: d.pokemon_v2_pokemon?.id,
         pokemonName: d.pokemon_v2_pokemon?.pokemon_v2_pokemonspecy.pokemon_v2_pokemonspeciesnames[0]?.name,
-        versionId: d.pokemon_v2_encounterslot.version_group_id,
-        versionName: _.map(d.pokemon_v2_encounterslot.pokemon_v2_versiongroup.pokemon_v2_versions, item => item.pokemon_v2_versionnames[0].name).join('/'),
+        versionId: d.pokemon_v2_version.id,
+        versionName: d.pokemon_v2_version.pokemon_v2_versionnames[0]?.name,
         minLevel: d.min_level,
         maxLevel: d.max_level,
         conditionId: d.pokemon_v2_encounterconditionvaluemaps[0]?.pokemon_v2_encounterconditionvalue.pokemon_v2_encounterconditionvaluenames[0].encounter_condition_value_id,
         condition: d.pokemon_v2_encounterconditionvaluemaps[0]?.pokemon_v2_encounterconditionvalue.pokemon_v2_encounterconditionvaluenames[0].name,
         chance: d.pokemon_v2_encounterslot.rarity,
-        chanceFactor: d.pokemon_v2_encounterslot.pokemon_v2_versiongroup.pokemon_v2_versions.length,
         methodId: d.pokemon_v2_encounterslot.pokemon_v2_encountermethod.id,
         methodName: d.pokemon_v2_encounterslot.pokemon_v2_encountermethod.pokemon_v2_encountermethodnames[0]?.name
       });
     }
 
     for(let t of temp) {
-      // check if this location is in the locations array
-      const location = final.find((item: any) => {
-        if('pokemonId' in t) {
-          return item.locationAreaId === t.locationAreaId && item.pokemonId === t.pokemonId;
-        }
+      // check if this version is in array
+      const version = final.find(item => item.versionId === t.versionId);
 
-        return item.locationAreaId === t.locationAreaId;
-      });
+      if(version) {
+        // check if the location is in array
+        const location = version.locations.find(item => {
+          if(t.pokemonId) {
+            return item.locationAreaId === t.locationAreaId && item.pokemonId === t.pokemonId;
+          }
 
-      if(location) {
-        const version = location.versions.find((item: any) => item.id === t.versionId);
+          return item.locationAreaId === t.locationAreaId;
+        });
 
-        if(version) {
-          // check if the method is in the methods array
-          const method = version.methods.find((item: any) => item.id === t.methodId);
+        if(location) {
+          // check if method is in array
+          const method = location.methods.find(item => item.id === t.methodId);
 
           if(method) {
             method.minLevel = Math.min(method.minLevel, t.minLevel);
             method.maxLevel = Math.max(method.maxLevel, t.maxLevel);
 
-            // check if the condition is in the conditions array
-            const condition = method.conditions.find((item: any) => item.id === t.conditionId);
+            // check if condition is in array
+            const condition = method.conditions.find(item => item.id === t.conditionId);
 
             if(condition) {
               condition.chance += t.chance;
             } else {
-              // condition was not in the conditions array
               method.conditions.push({
                 id: t.conditionId,
                 name: t.condition,
-                chance: t.chance,
-                chanceFactor: t.chanceFactor
+                chance: t.chance
               });
             }
           } else {
-            // method was not in the methods array
-            version.methods.push({
+            location.methods.push({
               id: t.methodId,
               name: t.methodName,
               minLevel: t.minLevel,
@@ -299,16 +301,17 @@ export class LocationService {
               conditions: [{
                 id: t.conditionId,
                 name: t.condition,
-                chance: t.chance,
-                chanceFactor: t.chanceFactor
+                chance: t.chance
               }]
             });
           }
         } else {
-          // version was not in the versions array
-          location.versions.push({
-            id: t.versionId,
-            name: t.versionName,
+          version.locations.push({
+            locationAreaId: t.locationAreaId,
+            locationAreaName: t.locationAreaName,
+            locationName: t.locationName,
+            pokemonId: t.pokemonId,
+            pokemonName: t.pokemonName,
             methods: [{
               id: t.methodId,
               name: t.methodName,
@@ -317,21 +320,21 @@ export class LocationService {
               conditions: [{
                 id: t.conditionId,
                 name: t.condition,
-                chance: t.chance,
-                chanceFactor: t.chanceFactor
+                chance: t.chance
               }]
             }]
           });
         }
       } else {
-        // location was not in the locations array
-        const i = {
-          locationAreaId: t.locationAreaId,
-          locationAreaName: t.locationAreaName,
-          locationName: t.locationName,
-          versions: [{
-            id: t.versionId,
-            name: t.versionName,
+        final.push({
+          versionId: t.versionId,
+          versionName: t.versionName,
+          locations: [{
+            locationAreaId: t.locationAreaId,
+            locationAreaName: t.locationAreaName,
+            locationName: t.locationName,
+            pokemonId: t.pokemonId,
+            pokemonName: t.pokemonName,
             methods: [{
               id: t.methodId,
               name: t.methodName,
@@ -340,19 +343,11 @@ export class LocationService {
               conditions: [{
                 id: t.conditionId,
                 name: t.condition,
-                chance: t.chance,
-                chanceFactor: t.chanceFactor
+                chance: t.chance
               }]
             }]
           }]
-        };
-
-        if('pokemonId' in t) {
-          (<LocationEncounter>i).pokemonId = t.pokemonId;
-          (<LocationEncounter>i).pokemonName = t.pokemonName;
-        }
-
-        final.push(i as T);
+        });
       }
     }
 

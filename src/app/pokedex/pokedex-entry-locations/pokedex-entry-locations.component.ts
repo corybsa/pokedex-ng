@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { VersionLocationEncounter } from 'src/app/models/location/version-location-encounter.model';
 import { Pokemon } from 'src/app/models/pokemon/pokemon.model';
 import { LocationService } from 'src/app/services/location.service';
 
@@ -10,7 +11,7 @@ import { LocationService } from 'src/app/services/location.service';
 export class PokedexEntryLocationsComponent implements OnInit, OnChanges {
   @Input() pokemon!: Pokemon;
 
-  locations: any[] = [];
+  encounters: VersionLocationEncounter[] = [];
 
   constructor(
     private service: LocationService
@@ -21,7 +22,7 @@ export class PokedexEntryLocationsComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     if(this.pokemon) {
-      this.service.getPokemonLocations(this.pokemon.id).subscribe(res => this.locations = res);
+      this.service.getPokemonLocations(this.pokemon.id).subscribe(res => this.encounters = res);
     }
   }
 }

@@ -1,13 +1,11 @@
-.location-card,
-.location-version-container {
+.encounter-card {
     margin: 0 1px 10px 1px;
 }
 
-.location-version-name,
-.location-condition-chance {
+.encounter-condition-chance {
     font-weight: bold;
 }
 
-.location-condition-container {
+.encounter-condition-container {
     margin-top: 5px;
 }

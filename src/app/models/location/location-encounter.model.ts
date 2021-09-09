@@ -1,4 +1,4 @@
-import { PokemonLocationVersion } from "./location-version.model";
+import { PokemonLocationMethod } from "./location-method.model";
 
 export interface LocationEncounter {
     locationAreaId: number;
@@ -6,5 +6,5 @@ export interface LocationEncounter {
     locationName: string;
     pokemonId: number;
     pokemonName: string;
-    versions: PokemonLocationVersion[];
+    methods: PokemonLocationMethod[];
 }

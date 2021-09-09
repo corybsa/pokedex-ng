@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LocationCache } from 'src/app/models/cache/location-cache';
 import { LocationEncounter } from 'src/app/models/location/location-encounter.model';
 import { Region } from 'src/app/models/location/region.model';
+import { VersionLocationEncounter } from 'src/app/models/location/version-location-encounter.model';
 import { LocationService } from 'src/app/services/location.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { LocationService } from 'src/app/services/location.service';
   styleUrls: ['./pokemap-location.component.css']
 })
 export class PokemapLocationComponent implements OnInit {
-  encounters: LocationEncounter[] = [];
+  encounters: VersionLocationEncounter[] = [];
   region!: Region;
 
   constructor(

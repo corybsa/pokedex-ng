@@ -1,24 +1,28 @@
 <mat-accordion>
-    <mat-expansion-panel *ngFor="let location of locations">
+    <mat-expansion-panel *ngFor="let encounter of encounters">
         <mat-expansion-panel-header>
-            <mat-panel-title>
-                {{ location.locationName }} <span *ngIf="location.locationAreaName">({{ location.locationAreaName }})</span>
-            </mat-panel-title>
+            <mat-panel-title>{{ encounter.versionName }}</mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-card *ngFor="let version of location.versions" class="location-version-container">
-            <mat-card-title>{{ version.name }}</mat-card-title>
-            <ng-container *ngFor="let method of version.methods">
-                <mat-card-subtitle>Levels {{ method.minLevel }} - {{ method.maxLevel }}</mat-card-subtitle>
-                <mat-card-content *ngFor="let condition of method.conditions">
-                    <span class="location-condition-chance">{{ condition.chance / condition.chanceFactor }}%</span>
-                    <span class="location-method-name"> {{ method.name }} {{ condition.name?.toLowerCase() }}</span>
-                </mat-card-content>
-            </ng-container>
-        </mat-card>
+        <mat-accordion>
+            <mat-expansion-panel *ngFor="let location of encounter.locations">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>{{ location.locationName }}</mat-panel-title>
+                    <mat-panel-description>{{ location.locationAreaName }}</mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <mat-card *ngFor="let method of location.methods" class="encounter-card">
+                    <mat-card-subtitle>Levels {{ method.minLevel }} - {{ method.maxLevel }}</mat-card-subtitle>
+                        <mat-card-content *ngFor="let condition of method.conditions">
+                            <span class="encounter-condition-chance">{{ condition.chance }}%</span>
+                            <span class="encounter-method-name"> {{ method.name }} {{ condition.name?.toLowerCase() }}</span>
+                        </mat-card-content>
+                </mat-card>
+            </mat-expansion-panel>
+        </mat-accordion>
     </mat-expansion-panel>
 </mat-accordion>
 
-<mat-card *ngIf="locations.length === 0" class="location-card">
+<mat-card *ngIf="encounters.length === 0" class="location-card">
     <mat-card-content>No location information.</mat-card-content>
 </mat-card>

@@ -1,26 +1,30 @@
 <div class="container">
     <mat-icon (click)="back()">arrow_back_ios</mat-icon>
     <h1>{{ region?.name }}</h1>
-    <h2>{{ encounters[0]?.locationName }}</h2>
+    <h2>{{ encounters[0] ? encounters[0].locations[0]?.locationName : '' }}</h2>
     <mat-accordion>
         <mat-expansion-panel *ngFor="let encounter of encounters">
             <mat-expansion-panel-header>
-                <mat-panel-title>{{ encounter.pokemonName }}</mat-panel-title>
-                <mat-panel-description>{{ encounter.locationAreaName }}</mat-panel-description>
+                <mat-panel-title>{{ encounter.versionName }}</mat-panel-title>
             </mat-expansion-panel-header>
 
-            <a mat-raised-button [routerLink]="['/pokedex', encounter.pokemonId]" class="encounter-card">View Pokédex entry</a>
+            <mat-accordion>
+                <mat-expansion-panel *ngFor="let location of encounter.locations">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>{{ location.pokemonName }}</mat-panel-title>
+                    </mat-expansion-panel-header>
 
-            <mat-card *ngFor="let version of encounter.versions" class="encounter-card">
-                <mat-card-title>{{ version.name }}</mat-card-title>
-                <ng-container *ngFor="let method of version.methods">
-                    <mat-card-subtitle>Levels {{ method.minLevel }} - {{ method.maxLevel }}</mat-card-subtitle>
-                    <mat-card-content *ngFor="let condition of method.conditions">
-                        <span class="encounter-condition-chance">{{ condition.chance / condition.chanceFactor }}%</span>
-                        <span class="encounter-method-name"> {{ method.name }} {{ condition.name?.toLowerCase() }}</span>
-                    </mat-card-content>
-                </ng-container>
-            </mat-card>
+                    <a mat-raised-button [routerLink]="['/pokedex', location.pokemonId]" class="encounter-card">View Pokédex entry</a>
+
+                    <mat-card *ngFor="let method of location.methods" class="encounter-card">
+                        <mat-card-subtitle>Levels {{ method.minLevel }} - {{ method.maxLevel }}</mat-card-subtitle>
+                            <mat-card-content *ngFor="let condition of method.conditions">
+                                <span class="encounter-condition-chance">{{ condition.chance }}%</span>
+                                <span class="encounter-method-name"> {{ method.name }} {{ condition.name?.toLowerCase() }}</span>
+                            </mat-card-content>
+                    </mat-card>
+                </mat-expansion-panel>
+            </mat-accordion>
         </mat-expansion-panel>
     </mat-accordion>
 
