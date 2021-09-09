@@ -164,7 +164,7 @@ export class LocationService {
 
     return this.apollo.watchQuery({
       query: gql`
-        query getLocationEncounters($locationId: Int!, $languageId: Int!) {
+        query getLocationEncounters${environment.name}($locationId: Int!, $languageId: Int!) {
           pokemon_v2_encounter(where: {pokemon_v2_locationarea: {location_id: {_eq: $locationId}}}, order_by: {location_area_id: asc, pokemon_v2_version: {pokemon_v2_versiongroup: {generation_id: asc}}}) {
             min_level
             max_level
