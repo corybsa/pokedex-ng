@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Apollo, gql } from 'apollo-angular';
 import { PokemonListItem } from '../models/pokemon/pokemon-list-item.model';
 import { PokemonType } from '../models/pokemon/pokemon-type.model';
@@ -98,19 +98,6 @@ export class PokedexService {
         this.pokemonListCache.setList(list);
 
         return list;
-      }),
-      catchError(() => {
-        const list = this.pokemonListCache.getList();
-        let res: PokemonListItem[] = [];
-
-        if(list) {
-          res = list;
-        }
-
-        return new Observable<PokemonListItem[]>(o => {
-          o.next(res);
-          o.complete();
-        });
       })
     );
   }
@@ -183,19 +170,6 @@ export class PokedexService {
         this.pokemonCache.addPokemon(pokemon);
 
         return pokemon;
-      }),
-      catchError(() => {
-        const list = this.pokemonCache.getPokemon(id);
-        let res: Pokemon = null as unknown as Pokemon; // wtf
-
-        if(list) {
-          res = list;
-        }
-
-        return new Observable<Pokemon>(o => {
-          o.next(res);
-          o.complete();
-        });
       })
     );
   }

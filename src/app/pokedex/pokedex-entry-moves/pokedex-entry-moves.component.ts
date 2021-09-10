@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { PokemonMove } from 'src/app/models/pokemon/pokemon-move.model';
+import { PokemonVersionMove } from 'src/app/models/pokemon/pokemon-version-move.model';
 import { Pokemon } from 'src/app/models/pokemon/pokemon.model';
 import { PokemonMovesService } from 'src/app/services/pokemon-moves.service';
 import * as _ from 'underscore';
@@ -11,7 +11,7 @@ import * as _ from 'underscore';
 })
 export class PokedexEntryMovesComponent implements OnInit, OnChanges {
   @Input() pokemon!: Pokemon;
-  moves: PokemonMove[] = [];
+  moves: PokemonVersionMove[] = [];
 
   constructor(
     private service: PokemonMovesService

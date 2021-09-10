@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { PokemonMove } from '../models/pokemon/pokemon-move.model';
 import * as _ from 'underscore';
 import { LanguageCache } from '../models/cache/language-cache';
 import { MoveCache } from '../models/cache/move-cache';
 import { GenerationCache } from '../models/cache/generation-cache';
+import { PokemonVersionMove } from '../models/pokemon/pokemon-version-move.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,7 @@ export class PokemonMovesService {
     private generationCache: GenerationCache
   ) { }
 
-  getMovesLearnedByLevelUp(pokemonId: number): Observable<PokemonMove[]> {
+  getMovesLearnedByLevelUp(pokemonId: number): Observable<PokemonVersionMove[]> {
     const list = this.moveCache.getMoves(pokemonId);
 
     if(list) {
@@ -34,8 +34,16 @@ export class PokemonMovesService {
     return this.apollo.watchQuery({
       query: gql`
         query getMovesLearnedByLevelUp${environment.name}($pokemonId: Int!, $generationId: Int!, $method: Int!, $languageId: Int!) {
-          pokemon_v2_pokemonmove(where: {pokemon_id: {_eq: $pokemonId}, move_learn_method_id: {_eq: $method}, pokemon_v2_versiongroup: {generation_id: {_eq: $generationId}}}, distinct_on: move_id) {
+          pokemon_v2_pokemonmove(where: {pokemon_id: {_eq: $pokemonId}, move_learn_method_id: {_eq: $method}, pokemon_v2_versiongroup: {generation_id: {_eq: $generationId}}}) {
             level
+            pokemon_v2_versiongroup {
+              id
+              pokemon_v2_versions {
+                pokemon_v2_versionnames(where: {language_id: {_eq: $languageId}}) {
+                  name
+                }
+              }
+            }
             pokemon_v2_move {
               power
               pp
@@ -74,10 +82,13 @@ export class PokemonMovesService {
     }).valueChanges.pipe(
       map((res: any) => {
         const moves = res.data.pokemon_v2_pokemonmove;
-        let pokemonMoves: PokemonMove[] = [];
+        const temp: any[] = [];
+        const final: PokemonVersionMove[] = [];
 
         for(let move of moves) {
-          pokemonMoves.push({
+          temp.push({
+            versionId: move.pokemon_v2_versiongroup.id,
+            versionName: _.map(move.pokemon_v2_versiongroup.pokemon_v2_versions, item => item.pokemon_v2_versionnames[0].name).join('/'),
             localeName: move.pokemon_v2_move.pokemon_v2_movenames[0].name,
             localeEffect: move.pokemon_v2_move.pokemon_v2_moveeffect.pokemon_v2_moveeffecteffecttexts[0]?.short_effect.replace('$effect_chance', move.pokemon_v2_move.move_effect_chance),
             localeClass: move.pokemon_v2_move.pokemon_v2_movedamageclass.pokemon_v2_movedamageclassnames[0].name,
@@ -93,23 +104,45 @@ export class PokemonMovesService {
           });
         }
 
-        pokemonMoves = _.sortBy(pokemonMoves, move => Math.min(move.levelLearned));
-        this.moveCache.addMoves(pokemonId, pokemonMoves);
+        for(let t of temp) {
+          const version = final.find(item => item.versionId === t.versionId);
 
-        return pokemonMoves;
-      }),
-      catchError(() => {
-        const list = this.moveCache.getMoves(pokemonId);
-        let res: PokemonMove[] = [];
-
-        if(list) {
-          res = list;
+          if(version) {
+            version.moves.push({
+              localeName: t.localeName,
+              localeEffect: t.localeEffect,
+              localeClass: t.localeClass,
+              levelLearned: t.levelLearned,
+              power: t.power,
+              powerPoints: t.powerPoints,
+              accuracy: t.accuracy,
+              type: t.type
+            });
+          } else {
+            final.push({
+              versionId: t.versionId,
+              versionName: t.versionName,
+              moves: [{
+                localeName: t.localeName,
+                localeEffect: t.localeEffect,
+                localeClass: t.localeClass,
+                levelLearned: t.levelLearned,
+                power: t.power,
+                powerPoints: t.powerPoints,
+                accuracy: t.accuracy,
+                type: t.type
+              }]
+            });
+          }
         }
 
-        return new Observable<PokemonMove[]>(o => {
-          o.next(res);
-          o.complete();
-        });
+        for(let version of final) {
+          version.moves = _.sortBy(version.moves, move => Math.min(move.levelLearned));
+        }
+        
+        this.moveCache.addMoves(pokemonId, final);
+
+        return final;
       })
     );
   }

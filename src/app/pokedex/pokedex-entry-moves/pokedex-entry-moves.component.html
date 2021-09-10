@@ -1,22 +1,28 @@
-<mat-card *ngFor="let move of moves" class="type-card">
-    <mat-card-title>
-        <span *ngIf="move.levelLearned === 0">Evolve</span>
-        <span *ngIf="move.levelLearned > 0">Lv. {{ move.levelLearned }}</span>
-        - {{ move.localeName }}
-    </mat-card-title>
-    <mat-card-subtitle>
-        <app-type-list [types]="[move.type]"></app-type-list>
-    </mat-card-subtitle>
-    <mat-card-content>
-        <div class="move-container" style="display: grid; grid-template-columns: repeat(2, 2fr);">
-            <span class="move-info"><strong>Power:</strong> {{ move.power || '--' }}</span>
-            <span class="move-info"><strong>PP:</strong> {{ move.powerPoints }}</span>
-            <span class="move-info"><strong>Accuracy:</strong> {{ move.accuracy || '--' }}</span>
-            <span class="move-info"><strong>Type:</strong> {{ move.localeClass }}</span>
-            <span class="move-effect"><strong>Effect:</strong> {{ move.localeEffect }}</span>
-        </div>
-    </mat-card-content>
-</mat-card>
+<mat-accordion>
+    <mat-expansion-panel *ngFor="let version of moves">
+        <mat-expansion-panel-header>{{ version.versionName }}</mat-expansion-panel-header>
+
+        <mat-card *ngFor="let move of version.moves" class="move-card">
+            <mat-card-title>
+                <span *ngIf="move.levelLearned === 0">Evolve</span>
+                <span *ngIf="move.levelLearned > 0">Lv. {{ move.levelLearned }}</span>
+                - {{ move.localeName }}
+            </mat-card-title>
+            <mat-card-subtitle>
+                <app-type-list [types]="[move.type]"></app-type-list>
+            </mat-card-subtitle>
+            <mat-card-content>
+                <div class="move-container" style="display: grid; grid-template-columns: repeat(2, 2fr);">
+                    <span class="move-info"><strong>Power:</strong> {{ move.power || '--' }}</span>
+                    <span class="move-info"><strong>PP:</strong> {{ move.powerPoints }}</span>
+                    <span class="move-info"><strong>Accuracy:</strong> {{ move.accuracy || '--' }}</span>
+                    <span class="move-info"><strong>Type:</strong> {{ move.localeClass }}</span>
+                    <span class="move-effect"><strong>Effect:</strong> {{ move.localeEffect }}</span>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </mat-expansion-panel>
+</mat-accordion>
 
 <mat-card *ngIf="moves.length === 0" class="type-card">
     <mat-card-content>No move data to display. Try choosing a different generation!</mat-card-content>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { catchError, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { EvolutionCache } from '../models/cache/evolution-cache';
 import { LanguageCache } from '../models/cache/language-cache';
@@ -137,19 +137,6 @@ export class EvolutionService {
         this.evolutionCache.addEvolutions(chainId, evos);
 
         return evos;
-      }),
-      catchError(() => {
-        const list = this.evolutionCache.getEvolutions(chainId);
-        let res: PokemonEvolution[] = [];
-
-        if(list) {
-          res = list;
-        }
-
-        return new Observable<PokemonEvolution[]>(o => {
-          o.next(res);
-          o.complete();
-        });
       })
     );
   }

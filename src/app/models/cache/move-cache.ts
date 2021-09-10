@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { PokemonMove } from "../pokemon/pokemon-move.model";
 import { Cache } from "./cache";
 import * as _ from 'underscore';
+import { PokemonVersionMove } from "../pokemon/pokemon-version-move.model";
 
 @Injectable({ providedIn: 'root' })
 export class MoveCache extends Cache {
@@ -9,7 +9,7 @@ export class MoveCache extends Cache {
         super();
     }
 
-    getMoves(pokemonId: number): PokemonMove[] | null {
+    getMoves(pokemonId: number): PokemonVersionMove[] | null {
         this.checkExpireTime();
 
         let moves: any[] = JSON.parse(localStorage.getItem(this.Keys.moves) as string);
@@ -23,7 +23,7 @@ export class MoveCache extends Cache {
         return list ? list.moves : null;
     }
 
-    addMoves(pokemonId: number, moves: PokemonMove[]) {
+    addMoves(pokemonId: number, moves: PokemonVersionMove[]) {
         let list = JSON.parse(localStorage.getItem(this.Keys.moves) as string);
 
         if(!list) {
