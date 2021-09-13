@@ -12,6 +12,7 @@
                 <mat-expansion-panel *ngFor="let location of encounter.locations">
                     <mat-expansion-panel-header>
                         <mat-panel-title>{{ location.pokemonName }}</mat-panel-title>
+                        <mat-panel-description>{{ location.locationAreaName }}</mat-panel-description>
                     </mat-expansion-panel-header>
 
                     <a mat-raised-button [routerLink]="['/pokedex', location.pokemonId]" class="encounter-card">View Pokédex entry</a>

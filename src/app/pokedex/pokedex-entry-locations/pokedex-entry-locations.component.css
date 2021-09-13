@@ -9,3 +9,7 @@
 .encounter-condition-container {
     margin-top: 5px;
 }
+
+:host::ng-deep mat-panel-description {
+    justify-content: end;
+}
